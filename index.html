@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0d6efd">
+<title>TAWD POS - نظام الكاشير</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body data-theme="light">
+
+<div id="loginPage" class="login-wrap">
+  <div class="login-box">
+    <div class="logo"><h1>TAWD POS</h1><p>نظام الكاشير المتكامل | تصميم Karim Elgioushy</p></div>
+    <div id="loginAlert"></div>
+    <div class="form-group"><label>اسم المستخدم</label><input type="text" id="loginUser" autocomplete="username"></div>
+    <div class="form-group"><label>كلمة المرور</label><input type="password" id="loginPass" autocomplete="current-password"></div>
+    <button class="btn btn-primary btn-block" onclick="login()">🔐 تسجيل الدخول</button>
+  </div>
+</div>
+
+<div id="app" class="app">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><h2>TAWD POS</h2><p>حقوق الملكية محفوظة لشركة طود</p></div>
+    <ul class="nav-menu">
+      <li class="nav-item"><div class="nav-link active" data-page="dashboard"><span class="nav-icon">📊</span>لوحة التحكم</div></li>
+      <li class="nav-divider">💼 المبيعات</li>
+      <li class="nav-item"><div class="nav-link" data-page="pos"><span class="nav-icon">🛒</span>نقطة البيع</div></li>
+      <li class="nav-item"><div class="nav-link" data-page="takeaway"><span class="nav-icon">🥡</span>تيك أواي</div></li>
+      <li class="nav-item"><div class="nav-link" data-page="delivery"><span class="nav-icon">🛵</span>دليفري</div></li>
+      <li class="nav-divider">📦 المخزون</li>
+      <li class="nav-item"><div class="nav-link" data-page="products"><span class="nav-icon">📦</span>الأصناف</div></li>
+      <li class="nav-item"><div class="nav-link" data-page="inventory"><span class="nav-icon">🏪</span>المخازن</div></li>
+      <li class="nav-divider">👥 الأطراف</li>
+      <li class="nav-item"><div class="nav-link" data-page="customers"><span class="nav-icon">👥</span>العملاء</div></li>
+      <li class="nav-item"><div class="nav-link" data-page="drivers"><span class="nav-icon">🛵</span>السائقون</div></li>
+      <li class="nav-item"><div class="nav-link" data-page="suppliers"><span class="nav-icon">🚚</span>الموردين</div></li>
+      <li class="nav-divider">💰 المالية</li>
+      <li class="nav-item"><div class="nav-link" data-page="debts"><span class="nav-icon">💳</span>المديونيات</div></li>
+      <li class="nav-item"><div class="nav-link" data-page="collections"><span class="nav-icon">💰</span>التحصيلات</div></li>
+      <li class="nav-item"><div class="nav-link" data-page="expenses"><span class="nav-icon">💸</span>المصروفات</div></li>
+      <li class="nav-item"><div class="nav-link" data-page="invoices"><span class="nav-icon">🧾</span>الفواتير</div></li>
+      <li class="nav-item"><div class="nav-link" data-page="returns"><span class="nav-icon">↩️</span>المرتجعات</div></li>
+      <li class="nav-divider">📈 التقارير</li>
+      <li class="nav-item"><div class="nav-link" data-page="sales-reports"><span class="nav-icon">📊</span>تقارير المبيعات</div></li>
+      <li class="nav-item"><div class="nav-link" data-page="driver-reports"><span class="nav-icon">🛵</span>تقارير السائقين</div></li>
+      <li class="nav-item"><div class="nav-link" data-page="activity-log"><span class="nav-icon">📝</span>سجل النشاطات</div></li>
+      <li class="nav-divider">⚙️ الإدارة</li>
+      <li class="nav-item"><div class="nav-link" data-page="shifts"><span class="nav-icon">⏰</span>الشيفتات</div></li>
+      <li class="nav-item"><div class="nav-link" data-page="attendance"><span class="nav-icon">✅</span>الحضور</div></li>
+      <li class="nav-item admin-only"><div class="nav-link" data-page="users"><span class="nav-icon">👤</span>المستخدمون</div></li>
+      <li class="nav-item admin-only"><div class="nav-link" data-page="inventory-check"><span class="nav-icon">📋</span>جرد المخزن</div></li>
+      <li class="nav-item admin-only"><div class="nav-link" data-page="cash-check"><span class="nav-icon">💵</span>جرد الخزينة</div></li>
+      <li class="nav-item admin-only"><div class="nav-link" data-page="settings"><span class="nav-icon">⚙️</span>الإعدادات</div></li>
+      <li class="nav-divider designer-only">🔐 المصمم</li>
+      <li class="nav-item designer-only"><div class="nav-link" data-page="activate"><span class="nav-icon">🔑</span>تفعيل البرنامج</div></li>
+      <li class="nav-item designer-only"><div class="nav-link" data-page="keys"><span class="nav-icon">🗝️</span>إدارة الأكواد</div></li>
+      <li class="nav-item designer-only"><div class="nav-link" data-page="keyreports"><span class="nav-icon">📈</span>تقارير الأكواد</div></li>
+    </ul>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-outline btn-sm" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title" id="pageTitle">لوحة التحكم</div>
+      </div>
+      <div class="topbar-actions">
+        <span class="user-badge" id="userBadge">👤</span>
+        <span class="user-badge" id="licenseBadge">📅</span>
+        <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        <button class="btn btn-danger btn-sm" onclick="logout()">🚪</button>
+      </div>
+    </div>
+    <div class="content" id="contentArea"></div>
+    <div class="footer-copy">© TAWD POS - جميع الحقوق محفوظة لشركة طود | تصميم Karim Elgioushy</div>
+  </main>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <div class="modal-header"><h3 id="modalTitle">عنوان</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+<div id="printArea"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/db.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/license.js"></script>
+<script src="js/customers.js"></script>
+<script src="js/products.js"></script>
+<script src="js/drivers.js"></script>
+<script src="js/pos.js"></script>
+<script src="js/reports.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
