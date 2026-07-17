@@ -1,102 +1,2416 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0d6efd">
-<title>TAWD POS - نظام الكاشير</title>
-<link rel="stylesheet" href="css/style.css">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Tawd | طود - نظام الإدارة المتكامل</title>
+    <style>
+        /* ============================================================
+           تنسيقات نظام طود Tawd (مدمجة)
+           حقوق الملكية: شركة طود Tawd
+           ============================================================ */
+        :root {
+            --primary: #D7263D;
+            --primary-dark: #B01E30;
+            --primary-light: #FCE8EB;
+            --secondary: #1FA25C;
+            --secondary-dark: #15804A;
+            --accent: #1F6FEB;
+            --accent-light: #E4EEFD;
+            --bg: #F5F7FA;
+            --surface: #FFFFFF;
+            --text: #1A1A2E;
+            --text-muted: #6B7280;
+            --border: #E5E7EB;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.06);
+            --shadow-hover: 0 8px 40px rgba(0,0,0,0.12);
+            --shadow-lg: 0 12px 60px rgba(0,0,0,0.15);
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --sidebar-width: 270px;
+            --header-height: 70px;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0F1219;
+            --surface: #1A1F2E;
+            --text: #F1F3F5;
+            --text-muted: #9CA3AF;
+            --border: #2D3346;
+            --shadow: 0 4px 24px rgba(0,0,0,0.3);
+            --shadow-hover: 0 8px 40px rgba(0,0,0,0.5);
+            --shadow-lg: 0 12px 60px rgba(0,0,0,0.6);
+            --primary-light: #3A1A24;
+            --accent-light: #1A2444;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body {
+            background:var(--bg);
+            color:var(--text);
+            font-family:var(--font);
+            line-height:1.6;
+            min-height:100vh;
+            transition:background var(--transition), color var(--transition);
+            overflow-x:hidden;
+        }
+        ::-webkit-scrollbar { width:6px; height:6px; }
+        ::-webkit-scrollbar-track { background:var(--bg); }
+        ::-webkit-scrollbar-thumb { background:var(--primary); border-radius:10px; }
+
+        a { color:var(--accent); text-decoration:none; transition:var(--transition); }
+        a:hover { opacity:0.8; }
+
+        button, input, select, textarea { font:inherit; outline:none; }
+        button { cursor:pointer; border:none; background:none; transition:all var(--transition); }
+        button:active { transform:scale(0.96); }
+
+        .container { max-width:1400px; margin:0 auto; padding:0 24px; }
+        .flex { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+        .flex-col { flex-direction:column; align-items:stretch; }
+        .flex-center { justify-content:center; }
+        .flex-between { justify-content:space-between; }
+        .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+        .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+        .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+        .gap { gap:12px; }
+        .mt-1 { margin-top:8px; }
+        .mt-2 { margin-top:16px; }
+        .mt-3 { margin-top:24px; }
+        .mt-4 { margin-top:32px; }
+        .mb-1 { margin-bottom:8px; }
+        .mb-2 { margin-bottom:16px; }
+        .p-1 { padding:8px; }
+        .p-2 { padding:16px; }
+        .p-3 { padding:24px; }
+        .text-center { text-align:center; }
+        .text-muted { color:var(--text-muted); }
+        .text-sm { font-size:0.875rem; }
+        .text-lg { font-size:1.25rem; }
+        .text-xl { font-size:1.5rem; }
+        .text-2xl { font-size:2rem; }
+        .fw-bold { font-weight:700; }
+        .w-full { width:100%; }
+        .hidden { display:none !important; }
+
+        @keyframes fadeInUp {
+            from { opacity:0; transform:translateY(30px); }
+            to { opacity:1; transform:translateY(0); }
+        }
+        @keyframes slideIn {
+            from { transform:translateX(100%); opacity:0; }
+            to { transform:translateX(0); opacity:1; }
+        }
+        .animate-in { animation:fadeInUp 0.5s ease forwards; }
+        .slide-in { animation:slideIn 0.3s ease forwards; }
+
+        .card {
+            background:var(--surface);
+            border-radius:var(--radius);
+            box-shadow:var(--shadow);
+            padding:24px;
+            border:1px solid var(--border);
+            transition:all var(--transition);
+        }
+        .card:hover { box-shadow:var(--shadow-hover); transform:translateY(-3px); }
+
+        .btn {
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            padding:12px 28px;
+            border-radius:var(--radius-sm);
+            font-weight:600;
+            font-size:0.95rem;
+            background:var(--primary);
+            color:#fff;
+            border:1px solid transparent;
+            transition:all var(--transition);
+            min-height:48px;
+            min-width:48px;
+        }
+        .btn:hover { opacity:0.9; transform:translateY(-2px); box-shadow:0 4px 20px rgba(215,38,61,0.35); }
+        .btn:active { transform:scale(0.96); }
+        .btn-secondary { background:var(--surface); color:var(--text); border-color:var(--border); }
+        .btn-secondary:hover { background:var(--bg); box-shadow:var(--shadow); }
+        .btn-success { background:var(--secondary); }
+        .btn-success:hover { box-shadow:0 4px 20px rgba(31,162,92,0.35); }
+        .btn-accent { background:var(--accent); }
+        .btn-accent:hover { box-shadow:0 4px 20px rgba(31,111,235,0.35); }
+        .btn-danger { background:#D7263D; }
+        .btn-danger:hover { box-shadow:0 4px 20px rgba(215,38,61,0.35); }
+        .btn-warning { background:#F59E0B; color:#fff; }
+        .btn-sm { padding:6px 14px; font-size:0.8rem; min-height:36px; }
+        .btn-lg { padding:14px 36px; font-size:1.05rem; min-height:56px; }
+        .btn-block { width:100%; justify-content:center; }
+
+        .input {
+            width:100%;
+            padding:12px 16px;
+            border-radius:var(--radius-sm);
+            border:2px solid var(--border);
+            background:var(--bg);
+            color:var(--text);
+            transition:all var(--transition);
+            font-size:0.95rem;
+        }
+        .input:focus {
+            border-color:var(--primary);
+            box-shadow:0 0 0 4px var(--primary-light);
+            background:var(--surface);
+        }
+        .input::placeholder { color:var(--text-muted); }
+
+        label { font-weight:600; display:block; margin-bottom:6px; color:var(--text-muted); font-size:0.9rem; }
+
+        .badge {
+            display:inline-block;
+            padding:4px 14px;
+            border-radius:50px;
+            font-size:0.7rem;
+            font-weight:700;
+            text-transform:uppercase;
+            letter-spacing:0.5px;
+            background:var(--border);
+            color:var(--text-muted);
+        }
+        .badge-success { background:var(--secondary); color:#fff; }
+        .badge-danger { background:var(--primary); color:#fff; }
+        .badge-warning { background:#F59E0B; color:#fff; }
+        .badge-accent { background:var(--accent); color:#fff; }
+        .badge-info { background:var(--accent); color:#fff; }
+
+        .table-wrap { overflow-x:auto; border-radius:var(--radius); border:1px solid var(--border); }
+        table { width:100%; border-collapse:collapse; }
+        th, td { padding:14px 16px; text-align:right; border-bottom:1px solid var(--border); }
+        th { font-weight:700; color:var(--text-muted); font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px; background:var(--bg); }
+        tr:hover td { background:var(--primary-light); }
+
+        #toast-container {
+            position:fixed;
+            bottom:24px;
+            right:24px;
+            z-index:9999;
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+            max-width:420px;
+        }
+        .toast {
+            background:var(--surface);
+            color:var(--text);
+            padding:16px 24px;
+            border-radius:var(--radius-sm);
+            box-shadow:var(--shadow-lg);
+            border-right:4px solid var(--primary);
+            animation:slideIn 0.3s ease forwards;
+            font-weight:500;
+        }
+        .toast-success { border-right-color:var(--secondary); }
+        .toast-error { border-right-color:var(--primary); }
+        .toast-warning { border-right-color:#F59E0B; }
+        .toast-info { border-right-color:var(--accent); }
+
+        .sidebar {
+            position:fixed;
+            top:0;
+            right:0;
+            width:var(--sidebar-width);
+            height:100vh;
+            background:var(--surface);
+            border-left:1px solid var(--border);
+            padding:20px 16px;
+            overflow-y:auto;
+            z-index:1000;
+            transition:all var(--transition);
+            box-shadow:var(--shadow-lg);
+        }
+        .sidebar .logo {
+            font-size:1.8rem;
+            font-weight:800;
+            color:var(--primary);
+            padding:8px 12px;
+            margin-bottom:24px;
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+        .sidebar .logo span { color:var(--text); font-weight:300; }
+        .sidebar .logo small { font-size:0.6rem; font-weight:400; color:var(--text-muted); }
+        .sidebar .nav-item {
+            display:flex;
+            align-items:center;
+            gap:14px;
+            padding:12px 16px;
+            border-radius:var(--radius-sm);
+            color:var(--text-muted);
+            font-weight:500;
+            transition:all var(--transition);
+            cursor:pointer;
+            margin-bottom:2px;
+        }
+        .sidebar .nav-item:hover { background:var(--primary-light); color:var(--primary); }
+        .sidebar .nav-item.active { background:var(--primary); color:#fff; }
+        .sidebar .nav-item .icon { font-size:1.2rem; width:28px; text-align:center; }
+        .sidebar .nav-divider { border-top:1px solid var(--border); margin:16px 0; }
+        .sidebar .user-info {
+            padding:16px 12px;
+            border-radius:var(--radius-sm);
+            background:var(--bg);
+            margin-top:auto;
+        }
+        .sidebar .user-info .name { font-weight:700; font-size:1rem; }
+        .sidebar .user-info .role { font-size:0.8rem; color:var(--text-muted); }
+
+        .main-content {
+            margin-right:var(--sidebar-width);
+            min-height:100vh;
+            padding:24px;
+        }
+        .main-content .header {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:16px 24px;
+            background:var(--surface);
+            border-radius:var(--radius);
+            border:1px solid var(--border);
+            margin-bottom:24px;
+            box-shadow:var(--shadow);
+            min-height:var(--header-height);
+        }
+        .main-content .header h1 { font-size:1.4rem; font-weight:700; }
+        .main-content .header .actions { display:flex; align-items:center; gap:12px; }
+
+        .stat-card {
+            background:var(--surface);
+            border-radius:var(--radius);
+            padding:20px 24px;
+            border:1px solid var(--border);
+            box-shadow:var(--shadow);
+            transition:all var(--transition);
+            position:relative;
+            overflow:hidden;
+        }
+        .stat-card::before {
+            content:'';
+            position:absolute;
+            top:0;
+            right:0;
+            width:4px;
+            height:100%;
+            background:var(--primary);
+        }
+        .stat-card:hover { box-shadow:var(--shadow-hover); transform:translateY(-4px); }
+        .stat-card .stat-icon { font-size:2rem; margin-bottom:4px; }
+        .stat-card .stat-value { font-size:1.8rem; font-weight:800; color:var(--text); }
+        .stat-card .stat-label { color:var(--text-muted); font-size:0.9rem; font-weight:500; }
+
+        .modal-overlay {
+            position:fixed;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            background:rgba(0,0,0,0.5);
+            z-index:9999;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            animation:fadeInUp 0.2s ease;
+        }
+        .modal-overlay .modal-content {
+            background:var(--surface);
+            border-radius:var(--radius);
+            padding:32px;
+            max-width:500px;
+            width:95%;
+            max-height:90vh;
+            overflow-y:auto;
+            box-shadow:var(--shadow-lg);
+        }
+        .modal-overlay .modal-content .close-btn {
+            float:left;
+            font-size:1.8rem;
+            color:var(--text-muted);
+            cursor:pointer;
+            transition:var(--transition);
+        }
+        .modal-overlay .modal-content .close-btn:hover { color:var(--primary); }
+
+        .menu-toggle {
+            display:none;
+            background:var(--surface);
+            border:1px solid var(--border);
+            border-radius:var(--radius-sm);
+            padding:8px 14px;
+            font-size:1.5rem;
+        }
+
+        /* POS Styles */
+        .pos-layout {
+            display:grid;
+            grid-template-columns:1fr 420px;
+            gap:24px;
+            margin-top:16px;
+        }
+        @media (max-width:1100px) {
+            .pos-layout { grid-template-columns:1fr; }
+            .pos-cart-panel { position:relative; top:0; max-height:none; }
+        }
+        @media (max-width:480px) {
+            .pos-products-grid { grid-template-columns:repeat(2,1fr); }
+            .pos-toolbar { flex-direction:column; align-items:stretch; }
+            .pos-toolbar .barcode-input { width:100%; }
+        }
+
+        .category-tabs {
+            display:flex;
+            gap:8px;
+            flex-wrap:wrap;
+            margin-bottom:16px;
+            padding:8px 4px;
+            overflow-x:auto;
+            -webkit-overflow-scrolling:touch;
+        }
+        .category-tabs .cat-btn {
+            padding:8px 20px;
+            border-radius:30px;
+            font-weight:600;
+            font-size:0.85rem;
+            border:2px solid var(--border);
+            background:var(--surface);
+            color:var(--text-muted);
+            transition:all var(--transition);
+            white-space:nowrap;
+            flex-shrink:0;
+        }
+        .category-tabs .cat-btn:hover { border-color:var(--primary); color:var(--primary); }
+        .category-tabs .cat-btn.active { border-color:var(--primary); background:var(--primary); color:#fff; }
+
+        .pos-products-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fill, minmax(155px,1fr));
+            gap:14px;
+        }
+        @media (max-width:600px) {
+            .pos-products-grid { grid-template-columns:repeat(2,1fr); gap:10px; }
+        }
+
+        .pos-product-card {
+            background:var(--surface);
+            border:2px solid var(--border);
+            border-radius:var(--radius-sm);
+            padding:12px 8px;
+            text-align:center;
+            cursor:pointer;
+            transition:all var(--transition);
+            position:relative;
+            min-height:160px;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+        }
+        .pos-product-card:hover {
+            border-color:var(--primary);
+            transform:translateY(-4px);
+            box-shadow:var(--shadow-hover);
+        }
+        .pos-product-card .product-icon { font-size:2rem; margin-bottom:4px; width:60px; height:60px; border-radius:50%; background:var(--bg); display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0; }
+        .pos-product-card .product-icon img { width:100%; height:100%; object-fit:cover; }
+        .pos-product-card .product-name { font-weight:600; font-size:0.9rem; line-height:1.2; margin-top:4px; flex:1; display:flex; align-items:center; }
+        .pos-product-card .product-price { color:var(--primary); font-weight:700; font-size:1.05rem; margin-top:2px; }
+        .pos-product-card .product-barcode { font-size:0.5rem; color:var(--text-muted); background:var(--bg); padding:1px 6px; border-radius:4px; margin-top:4px; direction:ltr; font-family:monospace; width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .pos-product-card .product-stock { font-size:0.6rem; color:var(--text-muted); position:absolute; top:4px; left:6px; background:var(--surface); padding:0 6px; border-radius:10px; }
+        .pos-product-card .product-stock.low { color:var(--primary); font-weight:700; }
+        .pos-product-card .quick-add { margin-top:6px; display:flex; gap:4px; justify-content:center; }
+        .pos-product-card .quick-add button { width:28px; height:28px; border-radius:50%; background:var(--accent-light); color:var(--accent); font-weight:700; font-size:0.9rem; transition:all var(--transition); }
+        .pos-product-card .quick-add button:hover { background:var(--accent); color:#fff; }
+
+        .pos-cart-panel {
+            background:var(--surface);
+            border-radius:var(--radius);
+            padding:20px;
+            border:1px solid var(--border);
+            box-shadow:var(--shadow);
+            position:sticky;
+            top:24px;
+            max-height:calc(100vh - 140px);
+            overflow-y:auto;
+            display:flex;
+            flex-direction:column;
+        }
+        .pos-cart-panel .cart-header { display:flex; justify-content:space-between; align-items:center; padding-bottom:12px; border-bottom:2px solid var(--border); margin-bottom:12px; flex-wrap:wrap; gap:8px; }
+        .pos-cart-panel .cart-header h3 { font-size:1.1rem; }
+        .pos-cart-panel .cart-items { flex:1; overflow-y:auto; min-height:80px; max-height:280px; }
+        .pos-cart-panel .cart-item { display:flex; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:4px; }
+        .pos-cart-panel .cart-item:last-child { border-bottom:none; }
+        .pos-cart-panel .cart-item .item-info { flex:1; min-width:60px; }
+        .pos-cart-panel .cart-item .item-name { font-weight:600; font-size:0.85rem; }
+        .pos-cart-panel .cart-item .item-price { font-size:0.75rem; color:var(--text-muted); }
+        .pos-cart-panel .cart-item .item-qty { display:flex; align-items:center; gap:4px; }
+        .pos-cart-panel .cart-item .item-qty button { width:26px; height:26px; border-radius:50%; background:var(--bg); font-weight:700; font-size:0.9rem; transition:all var(--transition); }
+        .pos-cart-panel .cart-item .item-qty button:hover { background:var(--primary-light); }
+        .pos-cart-panel .cart-item .item-total { font-weight:700; font-size:0.9rem; min-width:55px; text-align:left; }
+        .pos-cart-panel .cart-item .item-remove { color:var(--primary); font-weight:700; padding:0 4px; font-size:1rem; opacity:0.5; }
+        .pos-cart-panel .cart-item .item-remove:hover { opacity:1; }
+        .pos-cart-panel .cart-summary { border-top:2px solid var(--border); padding-top:12px; margin-top:8px; }
+        .pos-cart-panel .cart-summary .summary-row { display:flex; justify-content:space-between; padding:4px 0; font-size:0.9rem; }
+        .pos-cart-panel .cart-summary .summary-row.total { font-size:1.15rem; font-weight:700; border-top:2px solid var(--primary); padding-top:8px; margin-top:4px; color:var(--primary); }
+        .pos-cart-panel .cart-actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px; }
+        .pos-cart-panel .cart-actions .btn { min-height:44px; }
+
+        .pos-toolbar {
+            display:flex;
+            flex-wrap:wrap;
+            gap:12px;
+            align-items:center;
+            padding:12px 16px;
+            background:var(--surface);
+            border-radius:var(--radius-sm);
+            border:1px solid var(--border);
+            margin-bottom:12px;
+        }
+        .pos-toolbar .order-type-btn { padding:6px 16px; border-radius:30px; font-weight:600; font-size:0.85rem; border:2px solid var(--border); transition:all var(--transition); }
+        .pos-toolbar .order-type-btn.active { border-color:var(--primary); background:var(--primary); color:#fff; }
+        .pos-toolbar .order-type-btn:not(.active):hover { border-color:var(--primary); color:var(--primary); }
+        .pos-toolbar .barcode-input { width:180px; padding:6px 12px; border-radius:30px; border:2px solid var(--border); background:var(--bg); font-family:monospace; font-size:0.9rem; direction:ltr; text-align:center; }
+        .pos-toolbar .barcode-input:focus { border-color:var(--accent); }
+
+        .customer-search { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+        .customer-search .input { flex:1; min-width:200px; }
+
+        @media (max-width:768px) {
+            .sidebar { transform:translateX(100%); width:300px; }
+            .sidebar.open { transform:translateX(0); }
+            .main-content { margin-right:0; padding:12px; }
+            .grid-2,.grid-3,.grid-4 { grid-template-columns:1fr; }
+            .main-content .header { flex-direction:column; gap:12px; align-items:stretch; }
+            .main-content .header .actions { flex-wrap:wrap; justify-content:center; }
+            .menu-toggle { display:flex !important; }
+        }
+
+        @media print {
+            .sidebar, .header .actions, .menu-toggle { display:none !important; }
+            .main-content { margin:0; padding:0; }
+            .card { box-shadow:none !important; border:1px solid #ddd; }
+            body { background:#fff; }
+        }
+    </style>
 </head>
-<body data-theme="light">
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">طود <small>TAWD</small></div>
+        <div id="sidebarNav"></div>
+        <div class="nav-divider"></div>
+        <div class="user-info" id="sidebarUser"></div>
+    </aside>
 
-<div id="loginPage" class="login-wrap">
-  <div class="login-box">
-    <div class="logo"><h1>TAWD POS</h1><p>نظام الكاشير المتكامل | تصميم Karim Elgioushy</p></div>
-    <div id="loginAlert"></div>
-    <div class="form-group"><label>اسم المستخدم</label><input type="text" id="loginUser" autocomplete="username"></div>
-    <div class="form-group"><label>كلمة المرور</label><input type="password" id="loginPass" autocomplete="current-password"></div>
-    <button class="btn btn-primary btn-block" onclick="login()">🔐 تسجيل الدخول</button>
-  </div>
-</div>
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="header">
+            <div class="flex" style="gap:12px;">
+                <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+                <h1 id="pageTitle">لوحة التحكم</h1>
+            </div>
+            <div class="actions">
+                <button class="btn btn-secondary btn-sm" onclick="setTheme('light')">☀️</button>
+                <button class="btn btn-secondary btn-sm" onclick="setTheme('dark')">🌙</button>
+                <button class="btn btn-danger btn-sm" onclick="logout()">🚪 خروج</button>
+            </div>
+        </div>
+        <div id="app"></div>
+    </main>
 
-<div id="app" class="app">
-  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header"><h2>TAWD POS</h2><p>حقوق الملكية محفوظة لشركة طود</p></div>
-    <ul class="nav-menu">
-      <li class="nav-item"><div class="nav-link active" data-page="dashboard"><span class="nav-icon">📊</span>لوحة التحكم</div></li>
-      <li class="nav-divider">💼 المبيعات</li>
-      <li class="nav-item"><div class="nav-link" data-page="pos"><span class="nav-icon">🛒</span>نقطة البيع</div></li>
-      <li class="nav-item"><div class="nav-link" data-page="takeaway"><span class="nav-icon">🥡</span>تيك أواي</div></li>
-      <li class="nav-item"><div class="nav-link" data-page="delivery"><span class="nav-icon">🛵</span>دليفري</div></li>
-      <li class="nav-divider">📦 المخزون</li>
-      <li class="nav-item"><div class="nav-link" data-page="products"><span class="nav-icon">📦</span>الأصناف</div></li>
-      <li class="nav-item"><div class="nav-link" data-page="inventory"><span class="nav-icon">🏪</span>المخازن</div></li>
-      <li class="nav-divider">👥 الأطراف</li>
-      <li class="nav-item"><div class="nav-link" data-page="customers"><span class="nav-icon">👥</span>العملاء</div></li>
-      <li class="nav-item"><div class="nav-link" data-page="drivers"><span class="nav-icon">🛵</span>السائقون</div></li>
-      <li class="nav-item"><div class="nav-link" data-page="suppliers"><span class="nav-icon">🚚</span>الموردين</div></li>
-      <li class="nav-divider">💰 المالية</li>
-      <li class="nav-item"><div class="nav-link" data-page="debts"><span class="nav-icon">💳</span>المديونيات</div></li>
-      <li class="nav-item"><div class="nav-link" data-page="collections"><span class="nav-icon">💰</span>التحصيلات</div></li>
-      <li class="nav-item"><div class="nav-link" data-page="expenses"><span class="nav-icon">💸</span>المصروفات</div></li>
-      <li class="nav-item"><div class="nav-link" data-page="invoices"><span class="nav-icon">🧾</span>الفواتير</div></li>
-      <li class="nav-item"><div class="nav-link" data-page="returns"><span class="nav-icon">↩️</span>المرتجعات</div></li>
-      <li class="nav-divider">📈 التقارير</li>
-      <li class="nav-item"><div class="nav-link" data-page="sales-reports"><span class="nav-icon">📊</span>تقارير المبيعات</div></li>
-      <li class="nav-item"><div class="nav-link" data-page="driver-reports"><span class="nav-icon">🛵</span>تقارير السائقين</div></li>
-      <li class="nav-item"><div class="nav-link" data-page="activity-log"><span class="nav-icon">📝</span>سجل النشاطات</div></li>
-      <li class="nav-divider">⚙️ الإدارة</li>
-      <li class="nav-item"><div class="nav-link" data-page="shifts"><span class="nav-icon">⏰</span>الشيفتات</div></li>
-      <li class="nav-item"><div class="nav-link" data-page="attendance"><span class="nav-icon">✅</span>الحضور</div></li>
-      <li class="nav-item admin-only"><div class="nav-link" data-page="users"><span class="nav-icon">👤</span>المستخدمون</div></li>
-      <li class="nav-item admin-only"><div class="nav-link" data-page="inventory-check"><span class="nav-icon">📋</span>جرد المخزن</div></li>
-      <li class="nav-item admin-only"><div class="nav-link" data-page="cash-check"><span class="nav-icon">💵</span>جرد الخزينة</div></li>
-      <li class="nav-item admin-only"><div class="nav-link" data-page="settings"><span class="nav-icon">⚙️</span>الإعدادات</div></li>
-      <li class="nav-divider designer-only">🔐 المصمم</li>
-      <li class="nav-item designer-only"><div class="nav-link" data-page="activate"><span class="nav-icon">🔑</span>تفعيل البرنامج</div></li>
-      <li class="nav-item designer-only"><div class="nav-link" data-page="keys"><span class="nav-icon">🗝️</span>إدارة الأكواد</div></li>
-      <li class="nav-item designer-only"><div class="nav-link" data-page="keyreports"><span class="nav-icon">📈</span>تقارير الأكواد</div></li>
-    </ul>
-  </aside>
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container"></div>
 
-  <main class="main">
-    <div class="topbar">
-      <div style="display:flex;gap:8px;align-items:center">
-        <button class="btn btn-outline btn-sm" onclick="toggleSidebar()">☰</button>
-        <div class="topbar-title" id="pageTitle">لوحة التحكم</div>
-      </div>
-      <div class="topbar-actions">
-        <span class="user-badge" id="userBadge">👤</span>
-        <span class="user-badge" id="licenseBadge">📅</span>
-        <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
-        <button class="btn btn-danger btn-sm" onclick="logout()">🚪</button>
-      </div>
-    </div>
-    <div class="content" id="contentArea"></div>
-    <div class="footer-copy">© TAWD POS - جميع الحقوق محفوظة لشركة طود | تصميم Karim Elgioushy</div>
-  </main>
-</div>
+    <script>
+        // ================================================================
+        //  حقوق الملكية: شركة طود Tawd | التصميم: Karim Elgioushy
+        //  الإصدار النهائي - جميع المشاكل محلولة
+        // ================================================================
 
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <div class="modal-header"><h3 id="modalTitle">عنوان</h3><button class="modal-close" onclick="closeModal()">×</button></div>
-    <div id="modalBody"></div>
-  </div>
-</div>
-<div id="printArea"></div>
-<div class="toast-container" id="toastContainer"></div>
+        // ============================
+        //  إعدادات الـ API
+        // ============================
+        const API_BASE = 'https://tawdpos.infinityfree.io/api/';
+        console.log('✅ نظام طود جاهز للعمل');
 
-<script src="js/db.js"></script>
-<script src="js/utils.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/license.js"></script>
-<script src="js/customers.js"></script>
-<script src="js/products.js"></script>
-<script src="js/drivers.js"></script>
-<script src="js/pos.js"></script>
-<script src="js/reports.js"></script>
-<script src="js/app.js"></script>
+        // ============================
+        //  دوال الاتصال الأساسية
+        // ============================
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            const options = {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+            };
+            if (data) options.body = JSON.stringify(data);
+            try {
+                const response = await fetch(API_BASE + endpoint, options);
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error || 'حدث خطأ في الاتصال');
+                return result;
+            } catch (e) {
+                console.error('API Error:', e);
+                throw e;
+            }
+        }
+
+        // ============================
+        //  UTILITIES
+        // ============================
+        function formatCurrency(amount) { return Number(amount).toFixed(0) + ' ج.م'; }
+        function formatDate(date) { return new Date(date).toLocaleString('ar-EG'); }
+        function formatDateShort(date) { return new Date(date).toLocaleDateString('ar-EG'); }
+
+        // ============================
+        //  دوال المصادقة (Auth)
+        // ============================
+        window.login = async function(identifier, password) {
+            try {
+                const res = await apiCall('auth.php?action=login', 'POST', { identifier, password });
+                if (res.success) {
+                    window.STATE.currentUser = res.user;
+                    window.STATE.currentRole = res.user.role;
+                    localStorage.setItem('tawd_user', JSON.stringify(res.user));
+                    localStorage.setItem('tawd_role', res.user.role);
+                    if (res.user.theme_pref) setTheme(res.user.theme_pref);
+                    showToast('👋 مرحباً ' + res.user.name, 'success');
+                    if (res.user.role === 'owner') navigate('/owner/dashboard');
+                    else if (res.user.role === 'business') navigate('/business/pos');
+                    else if (res.user.role === 'driver') navigate('/driver/orders');
+                    else navigate('/customer/home');
+                    return true;
+                }
+            } catch (e) {
+                showToast('⚠️ ' + e.message, 'error');
+                return false;
+            }
+        };
+
+        window.register = async function(role, data) {
+            try {
+                const res = await apiCall('auth.php?action=register', 'POST', { role, ...data });
+                if (res.success) {
+                    if (role === 'customer') {
+                        window.STATE.currentUser = res.user;
+                        window.STATE.currentRole = 'customer';
+                        localStorage.setItem('tawd_user', JSON.stringify(res.user));
+                        localStorage.setItem('tawd_role', 'customer');
+                        navigate('/customer/home');
+                        showToast('✅ تم التسجيل بنجاح', 'success');
+                    } else {
+                        showToast('✅ تم التسجيل، بانتظار التفعيل', 'success');
+                        navigate('/login');
+                    }
+                    return true;
+                }
+            } catch (e) {
+                showToast('⚠️ ' + e.message, 'error');
+                return false;
+            }
+        };
+
+        window.logout = async function() {
+            try { await apiCall('auth.php?action=logout', 'POST'); } catch(e) {}
+            window.STATE.currentUser = null;
+            window.STATE.currentRole = null;
+            window.STATE.cart = [];
+            window.STATE.activeShift = null;
+            window.STATE.selectedCustomer = null;
+            localStorage.removeItem('tawd_user');
+            localStorage.removeItem('tawd_role');
+            navigate('/login');
+            showToast('تم تسجيل الخروج');
+        };
+
+        // ============================
+        //  استعادة الجلسة
+        // ============================
+        function restoreSession() {
+            const user = localStorage.getItem('tawd_user');
+            const role = localStorage.getItem('tawd_role');
+            if (user && role) {
+                try {
+                    window.STATE.currentUser = JSON.parse(user);
+                    window.STATE.currentRole = role;
+                    return true;
+                } catch(e) { return false; }
+            }
+            return false;
+        }
+
+        // ============================
+        //  دوال جلب البيانات
+        // ============================
+        window.loadPendingUsers = async function() {
+            try { return await apiCall('users.php?action=pending'); }
+            catch(e) { console.error('Error loading pending users:', e); return []; }
+        };
+
+        window.loadBusinessesList = async function() {
+            try { return await apiCall('users.php?action=businesses'); }
+            catch(e) { console.error('Error loading businesses:', e); return []; }
+        };
+
+        window.loadDriversList = async function() {
+            try { return await apiCall('users.php?action=drivers'); }
+            catch(e) { console.error('Error loading drivers:', e); return []; }
+        };
+
+        window.loadOrders = async function() {
+            try { return await apiCall('orders.php?action=list'); }
+            catch(e) { console.error('Error loading orders:', e); return []; }
+        };
+
+        window.loadProducts = async function() {
+            try { return await apiCall('business.php?action=products'); }
+            catch(e) { console.error('Error loading products:', e); return []; }
+        };
+
+        window.loadIngredients = async function() {
+            try { return await apiCall('business.php?action=ingredients'); }
+            catch(e) { console.error('Error loading ingredients:', e); return []; }
+        };
+
+        window.loadCustomers = async function() {
+            try { return await apiCall('customers.php?action=list'); }
+            catch(e) { console.error('Error loading customers:', e); return []; }
+        };
+
+        window.loadShifts = async function() {
+            try { return await apiCall('shifts.php?action=list'); }
+            catch(e) { console.error('Error loading shifts:', e); return []; }
+        };
+
+        window.loadCategories = async function() {
+            try { return await apiCall('business.php?action=categories'); }
+            catch(e) { console.error('Error loading categories:', e); return []; }
+        };
+
+        window.loadSuppliers = async function() {
+            try { return await apiCall('business.php?action=suppliers'); }
+            catch(e) { console.error('Error loading suppliers:', e); return []; }
+        };
+
+        window.loadTables = async function() {
+            try { return await apiCall('business.php?action=tables'); }
+            catch(e) { console.error('Error loading tables:', e); return []; }
+        };
+
+        window.loadRecipes = async function() {
+            try { return await apiCall('business.php?action=recipes'); }
+            catch(e) { console.error('Error loading recipes:', e); return []; }
+        };
+
+        window.loadDashboard = async function() {
+            try { return await apiCall('business.php?action=dashboard'); }
+            catch(e) { console.error('Error loading dashboard:', e); return null; }
+        };
+
+        window.loadKPI = async function() {
+            try { return await apiCall('reports.php?action=kpi'); }
+            catch(e) { console.error('Error loading KPI:', e); return null; }
+        };
+
+        window.searchCustomers = async function(query) {
+            if (query.length < 2) return [];
+            try { return await apiCall('customers.php?action=search&q=' + encodeURIComponent(query)); }
+            catch(e) { console.error('Error searching customers:', e); return []; }
+        };
+
+        // ============================
+        //  دوال التفعيل (للمصمم فقط)
+        // ============================
+        window.activateUser = async function(id) {
+            try {
+                await apiCall('users.php?action=activate', 'PUT', { id, status: 'active' });
+                showToast('✅ تم التفعيل', 'success');
+                router();
+            } catch(e) { showToast('⚠️ ' + e.message, 'error'); }
+        };
+
+        window.suspendUser = async function(id) {
+            try {
+                await apiCall('users.php?action=suspend', 'PUT', { id, status: 'suspended' });
+                showToast('⛔ تم التعليق', 'warning');
+                router();
+            } catch(e) { showToast('⚠️ ' + e.message, 'error'); }
+        };
+
+        window.toggleBusiness = async function(id) {
+            try {
+                const businesses = await loadBusinessesList();
+                const biz = businesses.find(b => b.id === id);
+                if (biz) {
+                    const newStatus = biz.status === 'active' ? 'suspended' : 'active';
+                    await apiCall('users.php?action=activate', 'PUT', { id, status: newStatus });
+                    showToast('✅ تم التحديث', 'success');
+                    router();
+                }
+            } catch(e) { showToast('⚠️ ' + e.message, 'error'); }
+        };
+
+        window.toggleDriver = async function(id) {
+            try {
+                const drivers = await loadDriversList();
+                const drv = drivers.find(d => d.id === id);
+                if (drv) {
+                    const newStatus = drv.status === 'active' ? 'suspended' : 'active';
+                    await apiCall('users.php?action=activate', 'PUT', { id, status: newStatus });
+                    showToast('✅ تم التحديث', 'success');
+                    router();
+                }
+            } catch(e) { showToast('⚠️ ' + e.message, 'error'); }
+        };
+
+        // ============================
+        //  دوال المنتجات
+        // ============================
+        window.addProduct = async function(productData) {
+            try {
+                await apiCall('business.php?action=product', 'POST', productData);
+                showToast('✅ تم إضافة المنتج', 'success');
+                router();
+            } catch(e) { showToast('⚠️ ' + e.message, 'error'); }
+        };
+
+        window.deleteProduct = async function(id) {
+            if (!confirm('⚠️ هل أنت متأكد من حذف هذا المنتج؟')) return;
+            try {
+                await apiCall('business.php?action=product&id=' + id, 'DELETE');
+                showToast('🗑️ تم الحذف', 'success');
+                router();
+            } catch(e) { showToast('⚠️ ' + e.message, 'error'); }
+        };
+
+        window.toggleProduct = async function(id) {
+            try {
+                const products = await loadProducts();
+                const prod = products.find(p => p.id === id);
+                if (prod) {
+                    await apiCall('business.php?action=product', 'PUT', { id, isActive: !prod.is_active });
+                    showToast('✅ تم التحديث', 'success');
+                    router();
+                }
+            } catch(e) { showToast('⚠️ ' + e.message, 'error'); }
+        };
+
+        window.addProductPrompt = function() {
+            const name = prompt('اسم المنتج:');
+            if (!name) return;
+            const price = parseFloat(prompt('السعر:'));
+            if (isNaN(price)) return;
+            addProduct({ name, price, stockQty: 0, minStockAlert: 0 });
+        };
+
+        // ============================
+        //  دوال المكونات
+        // ============================
+        window.addIngredient = async function(ingredientData) {
+            try {
+                await apiCall('business.php?action=ingredient', 'POST', ingredientData);
+                showToast('✅ تم إضافة المكون', 'success');
+                router();
+            } catch(e) { showToast('⚠️ ' + e.message, 'error'); }
+        };
+
+        window.deleteIngredient = async function(id) {
+            if (!confirm('⚠️ هل أنت متأكد من حذف هذا المكون؟')) return;
+            try {
+                await apiCall('business.php?action=ingredient&id=' + id, 'DELETE');
+                showToast('🗑️ تم الحذف', 'success');
+                router();
+            } catch(e) { showToast('⚠️ ' + e.message, 'error'); }
+        };
+
+        window.addIngredientPrompt = function() {
+            const name = prompt('اسم المكون:');
+            if (!name) return;
+            const unit = prompt('الوحدة (kg, g, l, ml, piece):') || 'piece';
+            const cost = parseFloat(prompt('تكلفة الوحدة:')) || 0;
+            const stock = parseFloat(prompt('الكمية المتاحة:')) || 0;
+            const alert = parseFloat(prompt('حد التنبيه:')) || 0;
+            addIngredient({ name, unit, stockQty: stock, minStockAlert: alert, costPerUnit: cost });
+        };
+
+        // ============================
+        //  دوال الشيفتات
+        // ============================
+        window.openShift = async function(cashierName, openingCash = 0) {
+            try {
+                const res = await apiCall('shifts.php?action=open', 'POST', { cashierName, openingCash });
+                window.STATE.activeShift = res.shiftId;
+                showToast('✅ تم فتح شيفت جديد', 'success');
+                router();
+                return res.shiftId;
+            } catch(e) {
+                showToast('⚠️ ' + e.message, 'error');
+                return null;
+            }
+        };
+
+        window.closeShift = async function(shiftId, closingCash, wastePercent = 0, wasteDetails = null, productionReport = null) {
+            try {
+                await apiCall('shifts.php?action=close', 'POST', {
+                    shiftId,
+                    closingCash,
+                    wastePercent,
+                    wasteDetails,
+                    productionReport
+                });
+                window.STATE.activeShift = null;
+                showToast('✅ تم إغلاق الشيفت', 'success');
+                router();
+            } catch(e) {
+                showToast('⚠️ ' + e.message, 'error');
+            }
+        };
+
+        window.openShiftPrompt = function() {
+            const cashierName = prompt('👤 أدخل اسم الكاشير:');
+            if (!cashierName) { showToast('⚠️ يجب إدخال اسم الكاشير', 'warning'); return; }
+            openShift(cashierName);
+        };
+
+        // ============================
+        //  دوال الطلبات
+        // ============================
+        window.createOrder = async function(orderData) {
+            try {
+                const res = await apiCall('orders.php?action=create', 'POST', orderData);
+                showToast('✅ تم إنشاء الطلب #' + res.id.slice(0,8), 'success');
+                return res;
+            } catch(e) {
+                showToast('⚠️ فشل إنشاء الطلب: ' + e.message, 'error');
+                return null;
+            }
+        };
+
+        window.updateOrderStatus = async function(orderId, status, note = '') {
+            try {
+                await apiCall('orders.php?action=updateStatus', 'POST', { orderId, status, note });
+                showToast('✅ تم تحديث الحالة', 'success');
+                router();
+            } catch(e) { showToast('⚠️ ' + e.message, 'error'); }
+        };
+
+        // ============================
+        //  دوال الكاشير (POS)
+        // ============================
+        window.addToCart = function(id, name, price) {
+            const cart = window.STATE.cart || [];
+            const existing = cart.find(i => i.productId === id);
+            if (existing) existing.qty += 1;
+            else cart.push({ productId: id, name, price, qty: 1 });
+            window.STATE.cart = cart;
+            renderView(location.hash.slice(1));
+        };
+
+        window.removeFromCart = function(idx) {
+            window.STATE.cart.splice(idx, 1);
+            renderView(location.hash.slice(1));
+        };
+
+        window.updateCartQty = function(idx, delta) {
+            const cart = window.STATE.cart || [];
+            if (cart[idx]) {
+                cart[idx].qty = Math.max(1, cart[idx].qty + delta);
+                if (cart[idx].qty === 0) cart.splice(idx, 1);
+                window.STATE.cart = cart;
+                renderView(location.hash.slice(1));
+            }
+        };
+
+        window.setOrderType = function(type) {
+            window.STATE.orderType = type;
+            renderView(location.hash.slice(1));
+        };
+
+        window.scanBarcode = function(code) {
+            if (!code || code.length < 3) { showToast('⚠️ أدخل باركود صحيح', 'warning'); return; }
+            loadProducts().then(products => {
+                const product = products.find(p => p.barcode === code);
+                if (product) {
+                    addToCart(product.id, product.name, product.price);
+                    document.getElementById('barcodeScanner').value = '';
+                } else {
+                    showToast('⚠️ منتج غير موجود', 'error');
+                }
+            });
+        };
+
+        window.confirmOrder = async function() {
+            const cart = window.STATE.cart || [];
+            if (cart.length === 0) { showToast('⚠️ السلة فارغة', 'error'); return; }
+            if (!window.STATE.activeShift) { showToast('⚠️ يجب فتح شيفت أولاً', 'warning'); return; }
+            
+            const user = window.STATE.currentUser;
+            const orderType = window.STATE.orderType || 'takeaway';
+            const paymentMethod = document.getElementById('paymentMethod')?.value || 'cash';
+            const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            const deliveryFee = orderType === 'delivery' ? 15 : 0;
+            const tax = subtotal * 0.14;
+            const total = subtotal + tax + deliveryFee;
+            const customer = window.STATE.selectedCustomer;
+
+            const orderData = {
+                customerId: customer ? customer.phone : null,
+                customerName: customer ? customer.customer_name || customer.customerName : 'زائر',
+                customerPhone: customer ? customer.phone : null,
+                type: orderType,
+                items: cart.map(i => ({ productId: i.productId, name: i.name, qty: i.qty, price: i.price, notes: '' })),
+                subtotal, discount: 0, deliveryFee, tax, total,
+                paymentMethod,
+                shiftId: window.STATE.activeShift
+            };
+
+            const result = await createOrder(orderData);
+            if (result) {
+                window.STATE.cart = [];
+                window.STATE.selectedCustomer = null;
+                router();
+            }
+        };
+
+        // ============================
+        //  دوال العملاء
+        // ============================
+        window.addCustomer = async function(customerData) {
+            try {
+                await apiCall('customers.php?action=add', 'POST', customerData);
+                showToast('✅ تم إضافة العميل', 'success');
+                return true;
+            } catch(e) {
+                showToast('⚠️ ' + e.message, 'error');
+                return false;
+            }
+        };
+
+        window.searchCustomer = async function() {
+            const query = document.getElementById('customerSearch')?.value;
+            if (!query || query.length < 2) { showToast('أدخل حرفين على الأقل', 'warning'); return; }
+            try {
+                const customers = await searchCustomers(query);
+                const container = document.getElementById('customersList');
+                if (container) {
+                    if (customers.length === 0) {
+                        container.innerHTML = '<p class="text-muted">لا يوجد عملاء مطابقين</p>';
+                    } else {
+                        container.innerHTML = customers.map(c => `
+                            <div class="flex-between" style="padding:8px 0;border-bottom:1px solid var(--border);">
+                                <div><strong>${c.customer_name}</strong> <span class="text-muted text-sm">${c.phone}</span></div>
+                                <div class="text-sm text-muted">${c.total_orders} طلب | ${formatCurrency(c.total_spent)}</div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch(e) {
+                showToast('⚠️ فشل البحث: ' + e.message, 'error');
+            }
+        };
+
+        window.addNewCustomer = function() {
+            const name = prompt('👤 اسم العميل:');
+            if (!name) return;
+            const phone = prompt('📱 رقم الهاتف:');
+            if (!phone || !phone.match(/01[0-2,5]{1}[0-9]{8}/)) {
+                showToast('رقم هاتف غير صحيح', 'error');
+                return;
+            }
+            addCustomer({ customerName: name, phone });
+            window.STATE.selectedCustomer = { customer_name: name, phone };
+            showToast('✅ تم إضافة العميل', 'success');
+            renderView(location.hash.slice(1));
+        };
+
+        window.clearCustomer = function() {
+            window.STATE.selectedCustomer = null;
+            renderView(location.hash.slice(1));
+        };
+
+        // ============================
+        //  دوال استعادة كلمة المرور
+        // ============================
+        window.showForgotPassword = function() {
+            document.getElementById('forgotPasswordModal').style.display = 'flex';
+        };
+
+        window.closeForgotPassword = function() {
+            document.getElementById('forgotPasswordModal').style.display = 'none';
+            document.getElementById('resetResult').style.display = 'none';
+        };
+
+        window.sendResetLink = async function() {
+            const phone = document.getElementById('resetPhone').value.trim();
+            const resultDiv = document.getElementById('resetResult');
+            
+            if (!phone || phone.length < 10) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '<p style="color:var(--primary);">⚠️ يرجى إدخال رقم هاتف صحيح</p>';
+                return;
+            }
+
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<p style="color:var(--accent);">⏳ جاري البحث عن الحساب...</p>';
+
+            try {
+                const response = await fetch(API_BASE + 'auth.php?action=resetPassword', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ phone: phone })
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `
+                        <p style="color:var(--secondary);">✅ ${result.message}</p>
+                        <p class="text-sm text-muted">كلمة المرور الجديدة: <strong>${result.newPassword}</strong></p>
+                        <p class="text-sm text-muted">يرجى تسجيل الدخول بها</p>
+                        <button class="btn btn-sm btn-primary mt-1" onclick="closeForgotPassword()">حسناً</button>
+                    `;
+                    showToast('✅ تم إعادة تعيين كلمة المرور', 'success');
+                } else {
+                    resultDiv.innerHTML = `<p style="color:var(--primary);">⚠️ ${result.error}</p>`;
+                }
+            } catch (e) {
+                resultDiv.innerHTML = `<p style="color:var(--primary);">⚠️ حدث خطأ: ${e.message}</p>`;
+                console.error('Reset password error:', e);
+            }
+        };
+
+        // ============================
+        //  دوال التوجيه (Router)
+        // ============================
+        function navigate(path) { location.hash = path; }
+
+        function router() {
+            const hash = location.hash.slice(1) || '/';
+            const user = window.STATE.currentUser;
+            const role = user ? user.role : null;
+            if (!role && hash !== '/login' && hash !== '/register') { navigate('/login'); return; }
+            if (role === 'owner' && !hash.startsWith('/owner')) { navigate('/owner/dashboard'); return; }
+            if (role === 'business' && !hash.startsWith('/business')) { navigate('/business/pos'); return; }
+            if (role === 'driver' && !hash.startsWith('/driver')) { navigate('/driver/orders'); return; }
+            if (role === 'customer' && !hash.startsWith('/customer')) { navigate('/customer/home'); return; }
+            renderView(hash);
+            updateSidebar(hash);
+        }
+
+        // ============================
+        //  دوال العرض (Render) - مختصرة ولكنها كافية
+        // ============================
+
+        // -------- صفحة تسجيل الدخول --------
+        function renderLogin() {
+            document.getElementById('pageTitle').textContent = 'تسجيل الدخول';
+            return `
+            <div class="container" style="max-width:440px;margin:60px auto;">
+                <div class="card animate-in" style="text-align:center;padding:40px;">
+                    <div style="font-size:4rem;margin-bottom:12px;">🏪</div>
+                    <h1 style="font-size:2rem;color:var(--primary);">طود</h1>
+                    <p class="text-muted" style="margin-bottom:24px;">نظام إدارة المطاعم والمتاجر المتكامل</p>
+                    <form id="loginForm">
+                        <div class="mb-2">
+                            <label>رقم الهاتف أو البريد الإلكتروني</label>
+                            <input class="input" type="text" id="loginIdentifier" placeholder="أدخل رقم الهاتف أو البريد" required>
+                        </div>
+                        <div class="mb-2">
+                            <label>كلمة المرور</label>
+                            <input class="input" type="password" id="loginPassword" placeholder="أدخل كلمة المرور" required>
+                        </div>
+                        <button class="btn btn-block btn-lg" type="submit" style="background:var(--primary);">🚪 دخول</button>
+                    </form>
+                    <div class="mt-2 text-center">
+                        <a href="#" onclick="showForgotPassword()" style="color:var(--accent);font-size:0.9rem;">🔑 نسيت كلمة المرور؟</a>
+                    </div>
+                    <div class="mt-3"><a href="#/register" onclick="navigate('/register')">📝 إنشاء حساب جديد</a></div>
+                    <div class="mt-2 text-muted text-sm"><span>🔒 حقوق الملكية: شركة طود Tawd</span></div>
+                </div>
+            </div>
+
+            <!-- مودال استعادة كلمة المرور -->
+            <div id="forgotPasswordModal" class="modal-overlay" style="display:none;">
+                <div class="modal-content">
+                    <span class="close-btn" onclick="closeForgotPassword()">×</span>
+                    <h2>🔑 استعادة كلمة المرور</h2>
+                    <p class="text-muted">أدخل رقم هاتفك لإعادة تعيين كلمة المرور</p>
+                    <div class="form-group">
+                        <label>رقم الهاتف</label>
+                        <input class="input" id="resetPhone" placeholder="أدخل رقم الهاتف المسجل">
+                    </div>
+                    <button class="btn btn-success btn-block" onclick="sendResetLink()">📩 إعادة تعيين</button>
+                    <div id="resetResult" class="mt-2" style="display:none;"></div>
+                </div>
+            </div>
+            `;
+        }
+
+        // -------- صفحة التسجيل --------
+        function renderRegister() {
+            document.getElementById('pageTitle').textContent = 'إنشاء حساب';
+            return `
+            <div class="container" style="max-width:520px;margin:40px auto;">
+                <div class="card animate-in" style="padding:32px;">
+                    <h2 style="text-align:center;margin-bottom:8px;">📝 إنشاء حساب جديد</h2>
+                    <p class="text-muted text-center" style="margin-bottom:24px;">اختر نوع الحساب واملأ البيانات</p>
+                    <form id="registerForm">
+                        <div class="mb-2">
+                            <label>نوع الحساب</label>
+                            <select class="input" id="regRole">
+                                <option value="customer">👤 عميل</option>
+                                <option value="business">🏪 محل/مطعم</option>
+                                <option value="driver">🚗 سائق</option>
+                            </select>
+                            <div class="text-sm text-muted mt-1">⚠️ حسابات المحلات والسائقين تحتاج تفعيل من الإدارة</div>
+                        </div>
+                        <div class="mb-2" id="regBusinessTypeWrap" style="display:none;">
+                            <label>نشاط المحل</label>
+                            <select class="input" id="regBusinessType">
+                                <option value="restaurant">🍽️ مطعم</option>
+                                <option value="supermarket">🛒 سوبر ماركت</option>
+                                <option value="electronics">💻 أدوات كهربائية</option>
+                                <option value="phone_accessories">📱 إكسسوارات موبايل</option>
+                                <option value="produce">🥬 خضار وفاكهة</option>
+                            </select>
+                        </div>
+                        <div class="mb-2"><label>الاسم الكامل</label><input class="input" type="text" id="regName" placeholder="أدخل اسمك" required></div>
+                        <div class="mb-2"><label>رقم الهاتف</label><input class="input" type="tel" id="regPhone" placeholder="01xxxxxxxxx" pattern="01[0-2,5]{1}[0-9]{8}" required></div>
+                        <div class="mb-2"><label>البريد الإلكتروني (اختياري)</label><input class="input" type="email" id="regEmail" placeholder="example@email.com"></div>
+                        <div class="mb-2"><label>كلمة المرور</label><input class="input" type="password" id="regPassword" placeholder="أدخل كلمة مرور قوية" required></div>
+                        <button class="btn btn-success btn-block btn-lg" type="submit">✅ تسجيل</button>
+                    </form>
+                    <div class="text-center mt-3"><a href="#/login" onclick="navigate('/login')">🔐 لديك حساب؟ سجل دخول</a></div>
+                </div>
+            </div>`;
+        }
+
+        // -------- لوحة المصمم --------
+        function renderOwner(view) {
+            document.getElementById('pageTitle').textContent = '👑 لوحة الإدارة';
+            
+            if (view === '/owner/dashboard') {
+                return `
+                <div class="grid-4 mt-2 animate-in">
+                    <div class="stat-card" onclick="navigate('/owner/activations')" style="cursor:pointer;">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-value" id="pendingCount">0</div>
+                        <div class="stat-label">طلبات التفعيل</div>
+                    </div>
+                    <div class="stat-card" onclick="navigate('/owner/businesses')" style="cursor:pointer;">
+                        <div class="stat-icon">🏪</div>
+                        <div class="stat-value" id="businessCount">0</div>
+                        <div class="stat-label">المحلات</div>
+                    </div>
+                    <div class="stat-card" onclick="navigate('/owner/drivers')" style="cursor:pointer;">
+                        <div class="stat-icon">🚗</div>
+                        <div class="stat-value" id="driverCount">0</div>
+                        <div class="stat-label">السائقين</div>
+                    </div>
+                    <div class="stat-card" onclick="navigate('/owner/data')" style="cursor:pointer;">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-value" id="totalOrders">0</div>
+                        <div class="stat-label">إجمالي الطلبات</div>
+                    </div>
+                </div>
+                <div class="flex mt-2">
+                    <button class="btn btn-secondary" onclick="navigate('/owner/activations')">✅ طلبات التفعيل</button>
+                    <button class="btn btn-secondary" onclick="navigate('/owner/businesses')">🏪 المحلات</button>
+                    <button class="btn btn-secondary" onclick="navigate('/owner/drivers')">🚗 السائقين</button>
+                    <button class="btn btn-secondary" onclick="navigate('/owner/settings')">⚙️ الإعدادات</button>
+                    <button class="btn btn-secondary" onclick="navigate('/owner/data')">💾 البيانات</button>
+                </div>
+                <script>
+                    (async function() {
+                        try {
+                            const pending = await loadPendingUsers();
+                            const businesses = await loadBusinessesList();
+                            const drivers = await loadDriversList();
+                            const orders = await loadOrders();
+                            document.getElementById('pendingCount').textContent = pending.length;
+                            document.getElementById('businessCount').textContent = businesses.length;
+                            document.getElementById('driverCount').textContent = drivers.length;
+                            document.getElementById('totalOrders').textContent = orders.length;
+                        } catch(e) {
+                            console.error('Error loading stats:', e);
+                        }
+                    })();
+                <\/script>
+                `;
+            }
+            
+            else if (view === '/owner/activations') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <h3>✅ طلبات التفعيل</h3>
+                    <div id="pendingList"><p class="text-muted">جاري التحميل...</p></div>
+                    <button class="btn btn-secondary mt-2" onclick="navigate('/owner/dashboard')">⬅️ رجوع</button>
+                </div>
+                <script>
+                    (async function() {
+                        try {
+                            const users = await loadPendingUsers();
+                            const container = document.getElementById('pendingList');
+                            if (users.length === 0) {
+                                container.innerHTML = '<p class="text-muted">🎉 لا توجد طلبات انتظار</p>';
+                            } else {
+                                container.innerHTML = users.map(u => \`
+                                    <div class="flex-between" style="padding:12px 0;border-bottom:1px solid var(--border);">
+                                        <div>
+                                            <strong>\${u.name}</strong>
+                                            <span class="badge \${u.role === 'business' ? 'badge-accent' : 'badge-warning'}">\${u.role === 'business' ? '🏪 محل' : '🚗 سائق'}</span>
+                                            <span class="text-muted text-sm">\${u.phone}</span>
+                                            \${u.work_number ? \`<span class="text-muted text-sm">| \${u.work_number}</span>\` : ''}
+                                            <div class="text-sm text-muted">تاريخ التسجيل: \${new Date(u.created_at).toLocaleDateString('ar-EG')}</div>
+                                        </div>
+                                        <div class="flex">
+                                            <button class="btn btn-success btn-sm" onclick="activateUser('\${u.id}')">✅ تفعيل</button>
+                                            <button class="btn btn-danger btn-sm" onclick="suspendUser('\${u.id}')">❌ رفض</button>
+                                        </div>
+                                    </div>
+                                \`).join('');
+                            }
+                        } catch(e) {
+                            document.getElementById('pendingList').innerHTML = '<p class="text-muted">⚠️ فشل التحميل: ' + e.message + '</p>';
+                            console.error('Error loading pending users:', e);
+                        }
+                    })();
+                <\/script>
+                `;
+            }
+            
+            else if (view === '/owner/businesses') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <h3>🏪 إدارة المحلات</h3>
+                    <div id="businessList"><p class="text-muted">جاري التحميل...</p></div>
+                    <button class="btn btn-secondary mt-2" onclick="navigate('/owner/dashboard')">⬅️ رجوع</button>
+                </div>
+                <script>
+                    (async function() {
+                        try {
+                            const biz = await loadBusinessesList();
+                            const container = document.getElementById('businessList');
+                            if (biz.length === 0) {
+                                container.innerHTML = '<p class="text-muted">لا توجد محلات</p>';
+                            } else {
+                                container.innerHTML = biz.map(b => \`
+                                    <div class="flex-between" style="padding:12px 0;border-bottom:1px solid var(--border);">
+                                        <div>
+                                            <strong>\${b.name}</strong>
+                                            <span class="badge \${b.status === 'active' ? 'badge-success' : b.status === 'pending' ? 'badge-warning' : 'badge-danger'}">\${b.status}</span>
+                                            <span class="text-muted text-sm">\${b.phone}</span>
+                                            \${b.work_number ? \`<span class="text-muted text-sm">| \${b.work_number}</span>\` : ''}
+                                        </div>
+                                        <div class="flex">
+                                            <button class="btn btn-sm \${b.status === 'active' ? 'btn-danger' : 'btn-success'}" onclick="toggleBusiness('\${b.id}')">
+                                                \${b.status === 'active' ? '⛔ إيقاف' : '✅ تفعيل'}
+                                            </button>
+                                            <button class="btn btn-sm btn-secondary" onclick="if(confirm('حذف هذا المحل؟')){deleteUser('\${b.id}');}">🗑️</button>
+                                        </div>
+                                    </div>
+                                \`).join('');
+                            }
+                        } catch(e) {
+                            document.getElementById('businessList').innerHTML = '<p class="text-muted">⚠️ فشل التحميل: ' + e.message + '</p>';
+                            console.error('Error loading businesses:', e);
+                        }
+                    })();
+                <\/script>
+                `;
+            }
+            
+            else if (view === '/owner/drivers') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <h3>🚗 إدارة السائقين</h3>
+                    <div id="driverList"><p class="text-muted">جاري التحميل...</p></div>
+                    <button class="btn btn-secondary mt-2" onclick="navigate('/owner/dashboard')">⬅️ رجوع</button>
+                </div>
+                <script>
+                    (async function() {
+                        try {
+                            const drv = await loadDriversList();
+                            const container = document.getElementById('driverList');
+                            if (drv.length === 0) {
+                                container.innerHTML = '<p class="text-muted">لا توجد سائقين</p>';
+                            } else {
+                                container.innerHTML = drv.map(d => \`
+                                    <div class="flex-between" style="padding:12px 0;border-bottom:1px solid var(--border);">
+                                        <div>
+                                            <strong>\${d.name}</strong>
+                                            <span class="badge \${d.status === 'active' ? 'badge-success' : d.status === 'pending' ? 'badge-warning' : 'badge-danger'}">\${d.status}</span>
+                                            <span class="text-muted text-sm">\${d.phone}</span>
+                                            \${d.work_number ? \`<span class="text-muted text-sm">| \${d.work_number}</span>\` : ''}
+                                        </div>
+                                        <div class="flex">
+                                            <button class="btn btn-sm \${d.status === 'active' ? 'btn-danger' : 'btn-success'}" onclick="toggleDriver('\${d.id}')">
+                                                \${d.status === 'active' ? '⛔ إيقاف' : '✅ تفعيل'}
+                                            </button>
+                                            <button class="btn btn-sm btn-secondary" onclick="if(confirm('حذف هذا السائق؟')){deleteUser('\${d.id}');}">🗑️</button>
+                                        </div>
+                                    </div>
+                                \`).join('');
+                            }
+                        } catch(e) {
+                            document.getElementById('driverList').innerHTML = '<p class="text-muted">⚠️ فشل التحميل: ' + e.message + '</p>';
+                            console.error('Error loading drivers:', e);
+                        }
+                    })();
+                <\/script>
+                `;
+            }
+            
+            else if (view === '/owner/settings') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <h3>⚙️ إعدادات النظام</h3>
+                    <div class="flex mt-2" style="gap:12px;">
+                        <button class="btn btn-secondary" onclick="setTheme('light')">☀️ وضع نهاري</button>
+                        <button class="btn btn-secondary" onclick="setTheme('dark')">🌙 وضع ليلي</button>
+                    </div>
+                    <button class="btn btn-secondary mt-2" onclick="navigate('/owner/dashboard')">⬅️ رجوع</button>
+                </div>
+                `;
+            }
+            
+            else if (view === '/owner/data') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <h3>💾 إدارة البيانات</h3>
+                    <div class="flex mt-2" style="gap:12px;flex-wrap:wrap;">
+                        <button class="btn btn-secondary" onclick="exportData()">📥 تصدير JSON</button>
+                        <button class="btn btn-danger" onclick="if(confirm('⚠️ هل أنت متأكد من حذف كل البيانات؟')){localStorage.clear();location.reload();}">🗑️ حذف كل البيانات</button>
+                    </div>
+                    <button class="btn btn-secondary mt-2" onclick="navigate('/owner/dashboard')">⬅️ رجوع</button>
+                </div>
+                `;
+            }
+            
+            else return `<div class="card mt-2"><h2>صفحة غير معروفة</h2></div>`;
+        }
+
+        // -------- لوحة المحل (Business) --------
+        function renderBusiness(view) {
+            const user = window.STATE.currentUser;
+            document.getElementById('pageTitle').textContent = '🏪 ' + (user ? user.name : 'المحل');
+
+            // ========== الكاشير (POS) ==========
+            if (view === '/business/pos') {
+                return renderPOS();
+            }
+
+            // ========== الطلبات ==========
+            if (view === '/business/orders') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <h3>📦 الطلبات</h3>
+                    <div id="ordersList"><p class="text-muted">جاري التحميل...</p></div>
+                    <button class="btn btn-secondary mt-2" onclick="navigate('/business/pos')">⬅️ رجوع</button>
+                </div>
+                <script>
+                    (async function() {
+                        try {
+                            const orders = await loadOrders();
+                            const container = document.getElementById('ordersList');
+                            if (orders.length === 0) {
+                                container.innerHTML = '<p class="text-muted">لا توجد طلبات</p>';
+                            } else {
+                                container.innerHTML = \`
+                                    <div class="table-wrap">
+                                        <table>
+                                            <thead><tr><th>رقم</th><th>العميل</th><th>النوع</th><th>الإجمالي</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+                                            <tbody>
+                                                \${orders.map(o => \`
+                                                    <tr>
+                                                        <td><strong>#\${o.id.slice(0,8)}</strong></td>
+                                                        <td>\${o.customer_name || 'زائر'}</td>
+                                                        <td>\${o.type === 'dine_in' ? '🍽️ صالة' : o.type === 'takeaway' ? '🛍️ تيك أواي' : '🚚 دليفري'}</td>
+                                                        <td>\${formatCurrency(o.total)}</td>
+                                                        <td><span class="badge \${o.status === 'delivered' ? 'badge-success' : o.status === 'pending' ? 'badge-warning' : o.status === 'cancelled' ? 'badge-danger' : 'badge-accent'}">\${o.status}</span></td>
+                                                        <td>
+                                                            <button class="btn btn-secondary btn-sm" onclick="printInvoice('\${o.id}')">🖨️</button>
+                                                            \${o.status === 'pending' ? \`<button class="btn btn-success btn-sm" onclick="updateOrderStatus('\${o.id}','preparing')">⏳</button>\` : ''}
+                                                            \${o.status === 'preparing' ? \`<button class="btn btn-success btn-sm" onclick="updateOrderStatus('\${o.id}','ready')">✅</button>\` : ''}
+                                                            \${o.status === 'ready' ? \`<button class="btn btn-accent btn-sm" onclick="updateOrderStatus('\${o.id}','out_for_delivery')">🚚</button>\` : ''}
+                                                            \${o.status === 'out_for_delivery' ? \`<button class="btn btn-success btn-sm" onclick="updateOrderStatus('\${o.id}','delivered')">✅</button>\` : ''}
+                                                        </td>
+                                                    </tr>
+                                                \`).join('')}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                \`;
+                            }
+                        } catch(e) {
+                            document.getElementById('ordersList').innerHTML = '<p class="text-muted">⚠️ فشل التحميل: ' + e.message + '</p>';
+                            console.error('Error loading orders:', e);
+                        }
+                    })();
+                <\/script>
+                `;
+            }
+
+            // ========== المخزون ==========
+            if (view === '/business/inventory') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <div class="flex-between">
+                        <h3>📦 المخزون</h3>
+                        <button class="btn btn-success btn-sm" onclick="addIngredientPrompt()">➕ إضافة مكون</button>
+                    </div>
+                    <div id="inventoryList"><p class="text-muted">جاري التحميل...</p></div>
+                    <button class="btn btn-secondary mt-2" onclick="navigate('/business/pos')">⬅️ رجوع</button>
+                </div>
+                <script>
+                    (async function() {
+                        try {
+                            const ingredients = await loadIngredients();
+                            const container = document.getElementById('inventoryList');
+                            if (ingredients.length === 0) {
+                                container.innerHTML = '<p class="text-muted">لا توجد مكونات</p>';
+                            } else {
+                                container.innerHTML = \`
+                                    <div class="table-wrap">
+                                        <table>
+                                            <thead><tr><th>المكون</th><th>الوحدة</th><th>الكمية</th><th>حد الأدنى</th><th>تكلفة الوحدة</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+                                            <tbody>
+                                                \${ingredients.map(i => \`
+                                                    <tr>
+                                                        <td><strong>\${i.name}</strong></td>
+                                                        <td>\${i.unit}</td>
+                                                        <td>\${i.stock_qty}</td>
+                                                        <td>\${i.min_stock_alert}</td>
+                                                        <td>\${formatCurrency(i.cost_per_unit)}</td>
+                                                        <td><span class="badge \${i.stock_qty <= i.min_stock_alert ? 'badge-danger' : 'badge-success'}">\${i.stock_qty <= i.min_stock_alert ? '⚠️ منخفض' : '✅ متوفر'}</span></td>
+                                                        <td><button class="btn btn-danger btn-sm" onclick="deleteIngredient('\${i.id}')">🗑️</button></td>
+                                                    </tr>
+                                                \`).join('')}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                \`;
+                            }
+                        } catch(e) {
+                            document.getElementById('inventoryList').innerHTML = '<p class="text-muted">⚠️ فشل التحميل: ' + e.message + '</p>';
+                            console.error('Error loading inventory:', e);
+                        }
+                    })();
+                <\/script>
+                `;
+            }
+
+            // ========== المنتجات ==========
+            if (view === '/business/products') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <div class="flex-between">
+                        <h3>📦 المنتجات</h3>
+                        <button class="btn btn-success btn-sm" onclick="addProductPrompt()">➕ إضافة منتج</button>
+                    </div>
+                    <div id="productsList"><p class="text-muted">جاري التحميل...</p></div>
+                    <button class="btn btn-secondary mt-2" onclick="navigate('/business/pos')">⬅️ رجوع</button>
+                </div>
+                <script>
+                    (async function() {
+                        try {
+                            const products = await loadProducts();
+                            const container = document.getElementById('productsList');
+                            if (products.length === 0) {
+                                container.innerHTML = '<p class="text-muted">لا توجد منتجات</p>';
+                            } else {
+                                container.innerHTML = \`
+                                    <div class="table-wrap">
+                                        <table>
+                                            <thead><tr><th>الاسم</th><th>السعر</th><th>التكلفة</th><th>المخزون</th><th>باركود</th><th>الفئة</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+                                            <tbody>
+                                                \${products.map(p => \`
+                                                    <tr>
+                                                        <td><strong>\${p.name}</strong></td>
+                                                        <td>\${formatCurrency(p.price)}</td>
+                                                        <td>\${formatCurrency(p.cost)}</td>
+                                                        <td>\${p.stock_qty}</td>
+                                                        <td>\${p.barcode || '—'}</td>
+                                                        <td>\${p.category_id || '—'}</td>
+                                                        <td><span class="badge \${p.is_active ? 'badge-success' : 'badge-danger'}">\${p.is_active ? 'نشط' : 'غير نشط'}</span></td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-secondary" onclick="toggleProduct('\${p.id}')">\${p.is_active ? '⛔' : '✅'}</button>
+                                                            <button class="btn btn-danger btn-sm" onclick="deleteProduct('\${p.id}')">🗑️</button>
+                                                        </td>
+                                                    </tr>
+                                                \`).join('')}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                \`;
+                            }
+                        } catch(e) {
+                            document.getElementById('productsList').innerHTML = '<p class="text-muted">⚠️ فشل التحميل: ' + e.message + '</p>';
+                            console.error('Error loading products:', e);
+                        }
+                    })();
+                <\/script>
+                `;
+            }
+
+            // ========== العملاء ==========
+            if (view === '/business/customers') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <h3>👥 العملاء</h3>
+                    <div class="flex mt-1">
+                        <input class="input" id="customerSearch" placeholder="🔍 بحث عن عميل..." style="max-width:300px;" onkeyup="if(event.key==='Enter')searchCustomer()">
+                        <button class="btn btn-accent btn-sm" onclick="searchCustomer()">🔍 بحث</button>
+                        <button class="btn btn-success btn-sm" onclick="addNewCustomer()">➕ عميل جديد</button>
+                    </div>
+                    <div id="customersList"><p class="text-muted">جاري التحميل...</p></div>
+                    <button class="btn btn-secondary mt-2" onclick="navigate('/business/pos')">⬅️ رجوع</button>
+                </div>
+                <script>
+                    (async function() {
+                        try {
+                            const customers = await loadCustomers();
+                            const container = document.getElementById('customersList');
+                            if (customers.length === 0) {
+                                container.innerHTML = '<p class="text-muted">لا يوجد عملاء</p>';
+                            } else {
+                                container.innerHTML = customers.map(c => \`
+                                    <div class="flex-between" style="padding:8px 0;border-bottom:1px solid var(--border);">
+                                        <div><strong>\${c.customer_name}</strong> <span class="text-muted text-sm">\${c.phone}</span></div>
+                                        <div class="text-sm text-muted">\${c.total_orders} طلب | \${formatCurrency(c.total_spent)}</div>
+                                    </div>
+                                \`).join('');
+                            }
+                        } catch(e) {
+                            document.getElementById('customersList').innerHTML = '<p class="text-muted">⚠️ فشل التحميل: ' + e.message + '</p>';
+                            console.error('Error loading customers:', e);
+                        }
+                    })();
+                <\/script>
+                `;
+            }
+
+            // ========== الشيفتات ==========
+            if (view === '/business/shifts') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <div class="flex-between">
+                        <h3>🔄 الشيفتات</h3>
+                        <button class="btn btn-success" onclick="openShiftPrompt()">➕ فتح شيفت</button>
+                    </div>
+                    <div id="shiftsList"><p class="text-muted">جاري التحميل...</p></div>
+                    <button class="btn btn-secondary mt-2" onclick="navigate('/business/pos')">⬅️ رجوع</button>
+                </div>
+                <script>
+                    (async function() {
+                        try {
+                            const shifts = await loadShifts();
+                            const container = document.getElementById('shiftsList');
+                            if (shifts.length === 0) {
+                                container.innerHTML = '<p class="text-muted">لا توجد شيفتات</p>';
+                            } else {
+                                container.innerHTML = \`
+                                    <div class="table-wrap">
+                                        <table>
+                                            <thead><tr><th>رقم</th><th>الكاشير</th><th>الفتح</th><th>الإغلاق</th><th>المبيعات</th><th>الطلبات</th><th>نسبة الهدر</th><th>الإجراء</th></tr></thead>
+                                            <tbody>
+                                                \${shifts.map(s => \`
+                                                    <tr>
+                                                        <td><strong>#\${s.id.slice(0,8)}</strong></td>
+                                                        <td>\${s.cashier_name || '—'}</td>
+                                                        <td>\${formatDate(s.opened_at)}</td>
+                                                        <td>\${s.closed_at ? formatDate(s.closed_at) : '—'}</td>
+                                                        <td>\${formatCurrency(s.total_sales || 0)}</td>
+                                                        <td>\${s.total_orders || 0}</td>
+                                                        <td>\${s.waste_percent ? s.waste_percent.toFixed(2) + '%' : '—'}</td>
+                                                        <td>
+                                                            \${!s.closed_at ? \`<button class="btn btn-danger btn-sm" onclick="closeShift('\${s.id}')">🔒 إغلاق</button>\` : '<span class="badge badge-success">✅ مغلق</span>'}
+                                                            \${s.closed_at ? \`<button class="btn btn-sm btn-secondary" onclick="showShiftReport('\${s.id}')">📋</button>\` : ''}
+                                                        </td>
+                                                    </tr>
+                                                \`).join('')}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                \`;
+                            }
+                        } catch(e) {
+                            document.getElementById('shiftsList').innerHTML = '<p class="text-muted">⚠️ فشل التحميل: ' + e.message + '</p>';
+                            console.error('Error loading shifts:', e);
+                        }
+                    })();
+                <\/script>
+                `;
+            }
+
+            // ========== التقارير ==========
+            if (view === '/business/reports') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <h3>📈 التقارير</h3>
+                    <div id="reportsData"><p class="text-muted">جاري التحميل...</p></div>
+                    <button class="btn btn-secondary mt-2" onclick="navigate('/business/pos')">⬅️ رجوع</button>
+                </div>
+                <script>
+                    (async function() {
+                        try {
+                            const data = await loadDashboard();
+                            const container = document.getElementById('reportsData');
+                            if (data) {
+                                container.innerHTML = \`
+                                    <div class="grid-3">
+                                        <div class="stat-card">
+                                            <div class="stat-icon">📦</div>
+                                            <div class="stat-value">\${data.orders?.total_orders || 0}</div>
+                                            <div class="stat-label">الطلبات</div>
+                                        </div>
+                                        <div class="stat-card">
+                                            <div class="stat-icon">💰</div>
+                                            <div class="stat-value">\${formatCurrency(data.orders?.total_revenue || 0)}</div>
+                                            <div class="stat-label">الإيرادات</div>
+                                        </div>
+                                        <div class="stat-card">
+                                            <div class="stat-icon">👥</div>
+                                            <div class="stat-value">\${data.customers || 0}</div>
+                                            <div class="stat-label">العملاء</div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2"><h4>📊 المنتجات</h4><p>\${data.products || 0} منتج</p></div>
+                                \`;
+                            } else {
+                                container.innerHTML = '<p class="text-muted">لا توجد بيانات</p>';
+                            }
+                        } catch(e) {
+                            document.getElementById('reportsData').innerHTML = '<p class="text-muted">⚠️ فشل التحميل: ' + e.message + '</p>';
+                            console.error('Error loading reports:', e);
+                        }
+                    })();
+                <\/script>
+                `;
+            }
+
+            // ========== الصفحة الرئيسية للمحل ==========
+            return `
+            <div class="card mt-2 animate-in">
+                <h3>🏪 لوحة المحل</h3>
+                <p>مرحباً في لوحة تحكم المحل</p>
+                <div class="grid-3 mt-2">
+                    <button class="btn btn-primary" onclick="navigate('/business/pos')">🛒 الكاشير</button>
+                    <button class="btn btn-secondary" onclick="navigate('/business/orders')">📦 الطلبات</button>
+                    <button class="btn btn-secondary" onclick="navigate('/business/inventory')">📦 المخزون</button>
+                    <button class="btn btn-secondary" onclick="navigate('/business/products')">📦 المنتجات</button>
+                    <button class="btn btn-secondary" onclick="navigate('/business/customers')">👥 العملاء</button>
+                    <button class="btn btn-secondary" onclick="navigate('/business/shifts')">🔄 الشيفتات</button>
+                    <button class="btn btn-secondary" onclick="navigate('/business/reports')">📈 التقارير</button>
+                </div>
+            </div>
+            `;
+        }
+
+        // ========== دالة عرض الكاشير (POS) ==========
+        function renderPOS() {
+            const cart = window.STATE.cart || [];
+            const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            const deliveryFee = window.STATE.orderType === 'delivery' ? 15 : 0;
+            const tax = subtotal * 0.14;
+            const total = subtotal + tax + deliveryFee;
+            const selectedCustomer = window.STATE.selectedCustomer || null;
+
+            return `
+            <div class="animate-in">
+                <div class="pos-toolbar">
+                    <div class="flex" style="gap:8px;">
+                        <button class="order-type-btn ${window.STATE.orderType === 'dine_in' ? 'active' : ''}" onclick="setOrderType('dine_in')">🍽️ صالة</button>
+                        <button class="order-type-btn ${window.STATE.orderType === 'takeaway' ? 'active' : ''}" onclick="setOrderType('takeaway')">🛍️ تيك أواي</button>
+                        <button class="order-type-btn ${window.STATE.orderType === 'delivery' ? 'active' : ''}" onclick="setOrderType('delivery')">🚚 دليفري</button>
+                    </div>
+                    <div class="flex" style="gap:8px;flex:1;min-width:200px;">
+                        <input class="barcode-input" id="barcodeScanner" placeholder="📷 مسح الباركود" onkeydown="if(event.key==='Enter'){scanBarcode(this.value);this.value='';}">
+                        <button class="btn btn-sm btn-accent" onclick="scanBarcode(document.getElementById('barcodeScanner').value)">🔍</button>
+                    </div>
+                    <div class="flex" style="gap:8px;">
+                        ${window.STATE.activeShift ? `<span class="badge badge-success">🔓 شيفت مفتوح</span>` : `<button class="btn btn-success btn-sm" onclick="openShiftPrompt()">🔓 فتح شيفت</button>`}
+                        <span class="badge badge-info">${cart.length} أصناف</span>
+                    </div>
+                </div>
+
+                <div class="card" style="padding:12px 16px;margin-bottom:12px;">
+                    <div class="flex-between">
+                        <div class="customer-search">
+                            <input class="input" id="customerSearch" placeholder="🔍 بحث عن عميل (اسم أو رقم هاتف)" 
+                                   oninput="if(this.value.length>=2)searchCustomer()" style="min-width:200px;padding:8px 12px;">
+                            <button class="btn btn-accent btn-sm" onclick="addNewCustomer()">➕ عميل جديد</button>
+                        </div>
+                        <div>
+                            ${selectedCustomer ? `
+                                <span class="badge badge-success">👤 ${selectedCustomer.customer_name || selectedCustomer.customerName} | ${selectedCustomer.phone}</span>
+                                <button class="btn btn-sm btn-secondary" onclick="clearCustomer()">✕</button>
+                            ` : `<span class="text-muted">لم يتم اختيار عميل</span>`}
+                        </div>
+                    </div>
+                    <div id="customerSearchResults" style="margin-top:8px;display:none;max-height:150px;overflow-y:auto;"></div>
+                </div>
+
+                <div class="pos-layout">
+                    <div>
+                        <div class="category-tabs">
+                            <button class="cat-btn active" data-cat="all" onclick="filterCategory('all')">📋 الكل</button>
+                            <button class="cat-btn" data-cat="cat-1" onclick="filterCategory('cat-1')">🍕 أطباق رئيسية</button>
+                            <button class="cat-btn" data-cat="cat-2" onclick="filterCategory('cat-2')">🥤 مشروبات</button>
+                            <button class="cat-btn" data-cat="cat-3" onclick="filterCategory('cat-3')">🍰 حلويات</button>
+                        </div>
+                        <div id="productsGrid"><p class="text-muted">جاري تحميل المنتجات...</p></div>
+                    </div>
+
+                    <div class="pos-cart-panel">
+                        <div class="cart-header">
+                            <h3>🛒 السلة</h3>
+                            <span class="badge badge-accent">${cart.length} صنف</span>
+                        </div>
+                        <div class="cart-items" id="cartItems">
+                            ${cart.length === 0 ? `<div style="text-align:center;padding:30px 0;color:var(--text-muted);"><div style="font-size:3rem;margin-bottom:8px;">🛒</div><p>السلة فارغة</p><p class="text-sm">أضف منتجات من القائمة</p></div>` :
+                                cart.map((item, idx) => `
+                                    <div class="cart-item">
+                                        <div class="item-info">
+                                            <div class="item-name">${item.name}</div>
+                                            <div class="item-price">${formatCurrency(item.price)}</div>
+                                        </div>
+                                        <div class="item-qty">
+                                            <button onclick="updateCartQty(${idx}, -1)">−</button>
+                                            <span style="min-width:24px;text-align:center;font-weight:700;">${item.qty}</span>
+                                            <button onclick="updateCartQty(${idx}, 1)">+</button>
+                                        </div>
+                                        <div class="item-total">${formatCurrency(item.price * item.qty)}</div>
+                                        <button class="item-remove" onclick="removeFromCart(${idx})">✕</button>
+                                    </div>
+                                `).join('')
+                            }
+                        </div>
+                        <div class="cart-summary">
+                            <div class="summary-row"><span>الإجمالي الفرعي</span><span>${formatCurrency(subtotal)}</span></div>
+                            ${window.STATE.orderType === 'delivery' ? `<div class="summary-row"><span>🚚 رسوم التوصيل</span><span>${formatCurrency(deliveryFee)}</span></div>` : ''}
+                            <div class="summary-row"><span>الضريبة (14%)</span><span>${formatCurrency(tax)}</span></div>
+                            <div class="summary-row total"><span>الإجمالي</span><span>${formatCurrency(total)}</span></div>
+                            <div class="flex-between mt-1">
+                                <span class="text-sm">طريقة الدفع:</span>
+                                <select id="paymentMethod" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);">
+                                    <option value="cash">💵 نقدي</option>
+                                    <option value="card">💳 بطاقة</option>
+                                    <option value="wallet">📱 محفظة</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="cart-actions">
+                            <button class="btn btn-success" onclick="confirmOrder()" ${cart.length === 0 ? 'disabled' : ''}>✅ تأكيد</button>
+                            <button class="btn btn-secondary" onclick="window.STATE.cart=[];renderView(location.hash.slice(1));">🗑️ تفريغ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                // تحميل المنتجات
+                (async function() {
+                    try {
+                        const products = await loadProducts();
+                        const container = document.getElementById('productsGrid');
+                        if (products.length === 0) {
+                            container.innerHTML = '<p class="text-muted">لا توجد منتجات. أضف منتجات من قائمة المنتجات</p>';
+                            return;
+                        }
+                        container.innerHTML = products.filter(p => p.is_active).map(p => \`
+                            <div class="pos-product-card" data-category="\${p.category_id || 'other'}" onclick="addToCart('\${p.id}','\${p.name}',\${p.price})">
+                                <span class="product-stock \${p.stock_qty <= p.min_stock_alert ? 'low' : ''}">\${p.stock_qty <= p.min_stock_alert ? '⚠️' : ''} \${p.stock_qty}</span>
+                                <div class="product-icon">\${p.image_url ? \`<img src="\${p.image_url}" alt="\${p.name}">\` : '🍽️'}</div>
+                                <div class="product-name">\${p.name}</div>
+                                <div class="product-price">\${formatCurrency(p.price)}</div>
+                                <div class="product-barcode">\${p.barcode || '—'}</div>
+                                <div class="quick-add">
+                                    <button onclick="event.stopPropagation();addToCart('\${p.id}','\${p.name}',\${p.price})">+</button>
+                                    <button onclick="event.stopPropagation();addToCartQty('\${p.id}','\${p.name}',\${p.price},2)">2</button>
+                                </div>
+                            </div>
+                        \`).join('');
+                    } catch(e) {
+                        document.getElementById('productsGrid').innerHTML = '<p class="text-muted">⚠️ فشل تحميل المنتجات: ' + e.message + '</p>';
+                        console.error('Error loading products for POS:', e);
+                    }
+                })();
+
+                window.filterCategory = function(catId) {
+                    document.querySelectorAll('.cat-btn').forEach(btn => {
+                        btn.classList.toggle('active', btn.dataset.cat === catId);
+                    });
+                    document.querySelectorAll('.pos-product-card').forEach(card => {
+                        if (catId === 'all') {
+                            card.style.display = '';
+                        } else {
+                            card.style.display = card.dataset.category === catId.replace('cat-', '') ? '' : 'none';
+                        }
+                    });
+                };
+            <\/script>
+            `;
+        }
+
+        // -------- لوحة السائق --------
+        function renderDriver(view) {
+            const user = window.STATE.currentUser;
+            document.getElementById('pageTitle').textContent = '🚗 لوحة السائق';
+            
+            if (view === '/driver/orders') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <h3>🚗 مرحباً ${user ? user.name : 'السائق'}</h3>
+                    <p class="text-muted">رقم العمل: ${user ? user.work_number || '—' : '—'}</p>
+                    <div id="driverOrders"><p class="text-muted">جاري التحميل...</p></div>
+                </div>
+                <script>
+                    (async function() {
+                        try {
+                            const orders = await loadOrders();
+                            const container = document.getElementById('driverOrders');
+                            const available = orders.filter(o => o.status === 'ready' || o.status === 'out_for_delivery');
+                            if (available.length === 0) {
+                                container.innerHTML = '<p class="text-muted">🚫 لا توجد طلبات متاحة</p>';
+                            } else {
+                                container.innerHTML = available.map(o => \`
+                                    <div class="card mb-1">
+                                        <div class="flex-between">
+                                            <h4>طلب #\${o.id.slice(0,8)}</h4>
+                                            <span class="badge \${o.status === 'ready' ? 'badge-success' : 'badge-warning'}">\${o.status}</span>
+                                        </div>
+                                        <p class="text-lg fw-bold">\${formatCurrency(o.total)}</p>
+                                        <p class="text-sm text-muted">العميل: \${o.customer_name || 'زائر'}</p>
+                                        <div class="flex mt-2">
+                                            \${o.status === 'ready' ? \`<button class="btn btn-success btn-sm" onclick="updateOrderStatus('\${o.id}','out_for_delivery')">🚚 استلام</button>\` : ''}
+                                            \${o.status === 'out_for_delivery' ? \`<button class="btn btn-success btn-sm" onclick="updateOrderStatus('\${o.id}','delivered')">✅ تسليم</button>\` : ''}
+                                        </div>
+                                    </div>
+                                \`).join('');
+                            }
+                        } catch(e) {
+                            document.getElementById('driverOrders').innerHTML = '<p class="text-muted">⚠️ فشل التحميل: ' + e.message + '</p>';
+                            console.error('Error loading driver orders:', e);
+                        }
+                    })();
+                <\/script>
+                `;
+            }
+            
+            else if (view === '/driver/earnings') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <h3>💰 الأرباح</h3>
+                    <div id="earningsData"><p class="text-muted">جاري التحميل...</p></div>
+                    <button class="btn btn-secondary mt-2" onclick="navigate('/driver/orders')">⬅️ رجوع</button>
+                </div>
+                <script>
+                    (async function() {
+                        try {
+                            const orders = await loadOrders();
+                            const completed = orders.filter(o => o.status === 'delivered');
+                            const total = completed.reduce((s, o) => s + o.total * 0.1, 0);
+                            document.getElementById('earningsData').innerHTML = \`
+                                <div class="grid-3">
+                                    <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-value">\${formatCurrency(total)}</div><div class="stat-label">إجمالي الأرباح</div></div>
+                                    <div class="stat-card"><div class="stat-icon">📦</div><div class="stat-value">\${completed.length}</div><div class="stat-label">الطلبات المكتملة</div></div>
+                                    <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-value">\${formatCurrency(completed.length ? total/completed.length : 0)}</div><div class="stat-label">متوسط الأرباح</div></div>
+                                </div>
+                            \`;
+                        } catch(e) {
+                            document.getElementById('earningsData').innerHTML = '<p class="text-muted">⚠️ فشل التحميل: ' + e.message + '</p>';
+                            console.error('Error loading earnings:', e);
+                        }
+                    })();
+                <\/script>
+                `;
+            }
+            
+            else if (view === '/driver/settings') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <h3>⚙️ إعدادات السائق</h3>
+                    <div class="grid-2 mt-2">
+                        <div><label>الاسم</label><input class="input" value="${user ? user.name : '—'}" disabled></div>
+                        <div><label>رقم العمل</label><input class="input" value="${user ? user.work_number || '—' : '—'}" disabled></div>
+                        <div><label>رقم الهاتف</label><input class="input" value="${user ? user.phone : '—'}" disabled></div>
+                    </div>
+                    <button class="btn btn-secondary mt-2" onclick="navigate('/driver/orders')">⬅️ رجوع</button>
+                </div>
+                `;
+            }
+            
+            else return `<div class="card mt-2"><h2>صفحة غير معروفة</h2></div>`;
+        }
+
+        // -------- لوحة العميل --------
+        function renderCustomer(view) {
+            const user = window.STATE.currentUser;
+            document.getElementById('pageTitle').textContent = '🏠 ' + (user ? user.name : 'العميل');
+            
+            if (view === '/customer/home') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <h3>🏠 مرحباً ${user ? user.name : 'العميل'}</h3>
+                    <p>هذه هي واجهة العميل</p>
+                    <div class="flex mt-2">
+                        <button class="btn btn-secondary" onclick="navigate('/customer/orders')">📋 طلباتي</button>
+                        <button class="btn btn-secondary" onclick="navigate('/customer/cart')">🛍️ السلة</button>
+                        <button class="btn btn-secondary" onclick="navigate('/customer/profile')">👤 حسابي</button>
+                    </div>
+                </div>
+                `;
+            }
+            
+            else if (view === '/customer/orders') {
+                return `
+                <div class="card mt-2 animate-in">
+                    <h3>📋 طلباتي</h3>
+                    <div id="customerOrders"><p class="text-muted">جاري التحميل...</p></div>
+                    <button class="btn btn-secondary mt-2" onclick="navigate('/customer/home')">⬅️ رجوع</button>
+                </div>
+                <script>
+                    (async function() {
+                        try {
+                            const orders = await loadOrders();
+                            const container = document.getElementById('customerOrders');
+                            const userOrders = orders.filter(o => o.customer_id === '${user ? user.id : ''}' || o.customer_phone === '${user ? user.phone : ''}');
+                            if (userOrders.length === 0) {
+                                container.innerHTML = '<p class="text-muted">🚫 لا توجد طلبات</p>';
+                            } else {
+                                container.innerHTML = userOrders.map(o => \`
+                                    <div class="card mb-1">
+                                        <div class="flex-between">
+                                            <h4>طلب #\${o.id.slice(0,8)}</h4>
+                                            <span class="badge \${o.status === 'delivered' ? 'badge-success' : 'badge-warning'}">\${o.status}</span>
+                                        </div>
+                                        <p class="text-lg fw-bold">\${formatCurrency(o.total)}</p>
+                                        <p class="text-sm text-muted">\${formatDate(o.created_at)}</p>
+                                        \${o.status === 'delivered' ? \`<button class="btn btn-sm btn-secondary" onclick="reorder('\${o.id}')">🔄 إعادة الطلب</button>\` : ''}
+                                        <button class="btn btn-sm btn-secondary" onclick="showTracking('\${o.id}')">📋 تتبع</button>
+                                    </div>
+                                \`).join('');
+                            }
+                        } catch(e) {
+                            document.getElementById('customerOrders').innerHTML = '<p class="text-muted">⚠️ فشل التحميل: ' + e.message + '</p>';
+                            console.error('Error loading customer orders:', e);
+                        }
+                    })();
+                <\/script>
+                `;
+            }
+            
+            else if (view === '/customer/cart') {
+                const cart = window.STATE.cart || [];
+                const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+                const tax = subtotal * 0.14;
+                const total = subtotal + tax;
+                
+                return `
+                <div class="card mt-2 animate-in">
+                    <h3>🛍️ السلة</h3>
+                    ${cart.map((item, idx) => `
+                        <div class="flex-between" style="padding:8px 0;border-bottom:1px solid var(--border);">
+                            <div><strong>${item.name}</strong> × ${item.qty}</div>
+                            <div class="flex" style="gap:8px;">
+                                <span>${formatCurrency(item.price * item.qty)}</span>
+                                <button class="btn btn-danger btn-sm" onclick="customerRemoveFromCart(${idx})">✕</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                    ${cart.length === 0 ? '<p class="text-muted">🛒 السلة فارغة</p>' : ''}
+                    <div class="mt-2" style="border-top:2px solid var(--border);padding-top:12px;">
+                        <div class="flex-between"><span>الإجمالي</span><span>${formatCurrency(total)}</span></div>
+                    </div>
+                    <button class="btn btn-success btn-block mt-2" onclick="customerPlaceOrder()" ${cart.length === 0 ? 'disabled' : ''}>✅ إتمام الطلب</button>
+                    <button class="btn btn-secondary btn-block mt-1" onclick="navigate('/customer/home')">⬅️ رجوع</button>
+                </div>
+                `;
+            }
+            
+            else if (view === '/customer/profile') {
+                return `
+                <div class="card mt-2 animate-in" style="max-width:500px;margin:0 auto;">
+                    <h3>👤 حسابي</h3>
+                    <div style="text-align:center;margin:12px 0;">
+                        <div style="width:80px;height:80px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:3rem;margin:0 auto;">👤</div>
+                    </div>
+                    <div class="grid-2">
+                        <div><label>الاسم</label><input class="input" value="${user ? user.name : ''}" disabled></div>
+                        <div><label>رقم الهاتف</label><input class="input" value="${user ? user.phone : ''}" disabled></div>
+                        <div><label>البريد</label><input class="input" value="${user ? user.email || '—' : '—'}" disabled></div>
+                        <div><label>العنوان</label><input class="input" value="${user && user.location_address ? user.location_address : '—'}" disabled></div>
+                    </div>
+                    <button class="btn btn-secondary btn-block mt-2" onclick="navigate('/customer/home')">⬅️ رجوع</button>
+                </div>
+                `;
+            }
+            
+            else if (view === '/customer/settings') {
+                return `
+                <div class="card mt-2 animate-in" style="max-width:500px;margin:0 auto;">
+                    <h3>⚙️ الإعدادات</h3>
+                    <div class="mt-2">
+                        <label>الوضع</label>
+                        <div class="flex" style="gap:12px;">
+                            <button class="btn btn-sm ${window.STATE.theme === 'light' ? 'btn-accent' : 'btn-secondary'}" onclick="setTheme('light')">☀️ نهاري</button>
+                            <button class="btn btn-sm ${window.STATE.theme === 'dark' ? 'btn-accent' : 'btn-secondary'}" onclick="setTheme('dark')">🌙 ليلي</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-block mt-2" onclick="navigate('/customer/home')">⬅️ رجوع</button>
+                </div>
+                `;
+            }
+            
+            else if (view.startsWith('/customer/shop/')) {
+                return `
+                <div class="card mt-2 animate-in">
+                    <h3>🏪 المحل</h3>
+                    <p class="text-muted">تفاصيل المحل</p>
+                    <button class="btn btn-secondary mt-2" onclick="navigate('/customer/home')">⬅️ رجوع</button>
+                </div>
+                `;
+            }
+            
+            else return `<div class="card mt-2"><h2>صفحة غير معروفة</h2></div>`;
+        }
+
+        // -------- دوال العميل المساعدة --------
+        window.customerAddToCart = function(id, name, price) {
+            const cart = window.STATE.cart || [];
+            const existing = cart.find(i => i.productId === id);
+            if (existing) existing.qty += 1;
+            else cart.push({ productId: id, name, price, qty: 1 });
+            window.STATE.cart = cart;
+            showToast('✅ تمت الإضافة', 'success');
+            renderView(location.hash.slice(1));
+        };
+
+        window.customerRemoveFromCart = function(idx) {
+            window.STATE.cart.splice(idx, 1);
+            renderView(location.hash.slice(1));
+        };
+
+        window.customerPlaceOrder = async function() {
+            const cart = window.STATE.cart || [];
+            if (cart.length === 0) { showToast('⚠️ السلة فارغة', 'error'); return; }
+            const user = window.STATE.currentUser;
+            
+            const businesses = await loadBusinessesList();
+            const biz = businesses.find(b => b.status === 'active');
+            if (!biz) { showToast('⚠️ لا يوجد محلات متاحة', 'error'); return; }
+            
+            const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            const tax = subtotal * 0.14;
+            const total = subtotal + tax;
+            
+            const orderData = {
+                businessId: biz.id,
+                customerId: user.id,
+                customerName: user.name,
+                customerPhone: user.phone,
+                type: 'delivery',
+                items: cart.map(i => ({ productId: i.productId, name: i.name, qty: i.qty, price: i.price, notes: '' })),
+                subtotal, discount: 0, deliveryFee: 15, tax, total,
+                paymentMethod: 'cash'
+            };
+            
+            const result = await createOrder(orderData);
+            if (result) {
+                window.STATE.cart = [];
+                showToast('✅ تم إرسال الطلب', 'success');
+                navigate('/customer/orders');
+            }
+        };
+
+        window.reorder = function(orderId) {
+            loadOrders().then(orders => {
+                const order = orders.find(o => o.id === orderId);
+                if (order) {
+                    window.STATE.cart = JSON.parse(order.items).map(i => ({ productId: i.productId, name: i.name, price: i.price, qty: i.qty }));
+                    navigate('/customer/cart');
+                    showToast('🔄 تم إعادة الطلب', 'success');
+                }
+            });
+        };
+
+        window.showTracking = function(orderId) {
+            const orders = loadOrders();
+            orders.then(allOrders => {
+                const order = allOrders.find(o => o.id === orderId);
+                if (!order || !order.tracking) {
+                    showToast('لا توجد بيانات تتبع', 'warning');
+                    return;
+                }
+                const tracking = JSON.parse(order.tracking);
+                if (!tracking || tracking.length === 0) {
+                    showToast('لا توجد بيانات تتبع', 'warning');
+                    return;
+                }
+                
+                const steps = [
+                    { status: 'pending', label: '📝 تم الاستلام' },
+                    { status: 'preparing', label: '⏳ جاري التحضير' },
+                    { status: 'ready', label: '✅ جاهز' },
+                    { status: 'out_for_delivery', label: '🚚 خرج للتوصيل' },
+                    { status: 'delivered', label: '🏠 تم التوصيل' }
+                ];
+                
+                let html = `<div style="padding:16px;"><h3>📋 تتبع الطلب #${orderId.slice(0,8)}</h3><div style="display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;padding:16px;">`;
+                
+                steps.forEach((step, idx) => {
+                    const isCompleted = tracking.some(t => t.status === step.status);
+                    html += `
+                        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                            <div style="width:40px;height:40px;border-radius:50%;background:${isCompleted ? '#1FA25C' : '#eee'};color:${isCompleted ? '#fff' : '#999'};display:flex;align-items:center;justify-content:center;font-weight:700;">${idx + 1}</div>
+                            <div style="font-size:0.7rem;text-align:center;color:${isCompleted ? 'var(--text)' : 'var(--text-muted)'};">${step.label}</div>
+                        </div>
+                    `;
+                    if (idx < steps.length - 1) {
+                        html += `<div style="width:40px;height:2px;background:${isCompleted ? '#1FA25C' : '#eee'};"></div>`;
+                    }
+                });
+                
+                html += `</div><div class="text-sm text-muted mt-2">آخر تحديث: ${formatDate(tracking[tracking.length-1]?.timestamp || new Date())}</div></div>`;
+                
+                const win = window.open('', '_blank', 'width=500,height=400');
+                win.document.write(`
+                    <html><head><title>تتبع الطلب</title>
+                    <style>body{font-family:sans-serif;padding:20px;direction:rtl;background:#fff;}</style>
+                    </head><body>${html}
+                    <button onclick="window.close()" style="margin-top:16px;padding:8px 24px;background:#D7263D;color:#fff;border:none;border-radius:8px;cursor:pointer;">إغلاق</button>
+                    </body></html>
+                `);
+                win.document.close();
+            });
+        };
+
+        // ============================
+        //  دالة العرض الرئيسية
+        // ============================
+        function renderView(view) {
+            const app = document.getElementById('app');
+            const user = window.STATE.currentUser;
+            const role = user ? user.role : null;
+
+            if (!user && view !== '/login' && view !== '/register') {
+                app.innerHTML = renderLogin();
+                bindEvents();
+                return;
+            }
+            if (view === '/login') {
+                app.innerHTML = renderLogin();
+                bindEvents();
+                return;
+            }
+            if (view === '/register') {
+                app.innerHTML = renderRegister();
+                bindEvents();
+                return;
+            }
+
+            if (role === 'owner') app.innerHTML = renderOwner(view);
+            else if (role === 'business') app.innerHTML = renderBusiness(view);
+            else if (role === 'driver') app.innerHTML = renderDriver(view);
+            else if (role === 'customer') app.innerHTML = renderCustomer(view);
+            else app.innerHTML = `<div class="card mt-2"><h2>صفحة غير موجودة</h2></div>`;
+            bindEvents();
+        }
+
+        // ============================
+        //  ربط الأحداث
+        // ============================
+        function bindEvents() {
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const identifier = document.getElementById('loginIdentifier').value.trim();
+                    const password = document.getElementById('loginPassword').value;
+                    await login(identifier, password);
+                });
+            }
+            const regForm = document.getElementById('registerForm');
+            if (regForm) {
+                const roleSelect = document.getElementById('regRole');
+                const bizWrap = document.getElementById('regBusinessTypeWrap');
+                if (roleSelect) {
+                    roleSelect.addEventListener('change', () => {
+                        bizWrap.style.display = roleSelect.value === 'business' ? 'block' : 'none';
+                    });
+                }
+                regForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const role = document.getElementById('regRole').value;
+                    const name = document.getElementById('regName').value.trim();
+                    const phone = document.getElementById('regPhone').value.trim();
+                    const email = document.getElementById('regEmail').value.trim() || null;
+                    const password = document.getElementById('regPassword').value;
+                    const businessType = document.getElementById('regBusinessType')?.value || null;
+                    if (!phone.match(/01[0-2,5]{1}[0-9]{8}/)) {
+                        showToast('رقم هاتف غير صحيح', 'error');
+                        return;
+                    }
+                    await register(role, { name, phone, email, password, businessType });
+                });
+            }
+        }
+
+        // ============================
+        //  دوال الـ UI المساعدة
+        // ============================
+        function showToast(msg, type = 'info') {
+            const c = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            el.className = 'toast';
+            if (type === 'success') el.classList.add('toast-success');
+            if (type === 'error') el.classList.add('toast-error');
+            if (type === 'warning') el.classList.add('toast-warning');
+            if (type === 'info') el.classList.add('toast-info');
+            el.textContent = msg;
+            c.appendChild(el);
+            setTimeout(() => { el.remove(); }, 3500);
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            window.STATE.theme = theme;
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function updateSidebar(view) {
+            const nav = document.getElementById('sidebarNav');
+            const user = window.STATE.currentUser;
+            const role = user ? user.role : null;
+            let items = [];
+            
+            if (role === 'owner') {
+                items = [
+                    { label: '📊 لوحة التحكم', path: '/owner/dashboard' },
+                    { label: '✅ طلبات التفعيل', path: '/owner/activations' },
+                    { label: '🏪 المحلات', path: '/owner/businesses' },
+                    { label: '🚗 السائقين', path: '/owner/drivers' },
+                    { label: '⚙️ الإعدادات', path: '/owner/settings' },
+                    { label: '💾 البيانات', path: '/owner/data' }
+                ];
+            } else if (role === 'business') {
+                items = [
+                    { label: '🛒 الكاشير', path: '/business/pos' },
+                    { label: '📦 الطلبات', path: '/business/orders' },
+                    { label: '📦 المخزون', path: '/business/inventory' },
+                    { label: '📊 جرد المخزن', path: '/business/stocktake' },
+                    { label: '🔄 الشيفتات', path: '/business/shifts' },
+                    { label: '📦 المنتجات', path: '/business/products' },
+                    { label: '🧪 الريسبي', path: '/business/recipes' },
+                    { label: '🪑 الطاولات', path: '/business/tables' },
+                    { label: '👥 العملاء', path: '/business/customers' },
+                    { label: '🏷️ الموردون', path: '/business/suppliers' },
+                    { label: '👔 الموظفون', path: '/business/employees' },
+                    { label: '💰 المرتبات', path: '/business/payroll' },
+                    { label: '📈 التقارير', path: '/business/reports' },
+                    { label: '📊 الحسابات', path: '/business/accounts' },
+                    { label: '📊 مؤشرات الأداء', path: '/business/kpi' },
+                    { label: '⚙️ إعدادات المحل', path: '/business/settings' }
+                ];
+            } else if (role === 'driver') {
+                items = [
+                    { label: '📋 الطلبات', path: '/driver/orders' },
+                    { label: '💰 الأرباح', path: '/driver/earnings' },
+                    { label: '⚙️ الإعدادات', path: '/driver/settings' }
+                ];
+            } else if (role === 'customer') {
+                items = [
+                    { label: '🏠 الرئيسية', path: '/customer/home' },
+                    { label: '🛒 طلباتي', path: '/customer/orders' },
+                    { label: '🛍️ السلة', path: '/customer/cart' },
+                    { label: '👤 حسابي', path: '/customer/profile' },
+                    { label: '⚙️ الإعدادات', path: '/customer/settings' }
+                ];
+            }
+            
+            nav.innerHTML = items.map(item =>
+                `<div class="nav-item ${view === item.path ? 'active' : ''}" onclick="navigate('${item.path}')">
+                    <span class="icon">${item.label.split(' ')[0]}</span>
+                    <span>${item.label.split(' ').slice(1).join(' ')}</span>
+                </div>`
+            ).join('');
+
+            const userInfo = document.getElementById('sidebarUser');
+            if (user && user.role !== 'owner') {
+                const roleNames = { business: '🏪 محل', driver: '🚗 سائق', customer: '👤 عميل' };
+                userInfo.innerHTML = `
+                    <div class="name">${user.name}</div>
+                    <div class="role">${roleNames[user.role] || user.role}</div>
+                    ${user.work_number ? `<div style="font-size:0.75rem;color:var(--text-muted);">رقم العمل: ${user.work_number}</div>` : ''}
+                `;
+            } else if (user && user.role === 'owner') {
+                userInfo.innerHTML = `<div class="name">👑 مدير النظام</div><div class="role">صلاحية كاملة</div>`;
+            }
+        }
+
+        // ============================
+        //  الحالة العامة
+        // ============================
+        window.STATE = {
+            currentUser: null,
+            currentRole: null,
+            theme: 'light',
+            cart: [],
+            activeShift: null,
+            selectedCustomer: null,
+            orderType: 'takeaway'
+        };
+
+        // ============================
+        //  تهيئة النظام
+        // ============================
+        window.addEventListener('hashchange', router);
+        window.addEventListener('load', () => {
+            if (restoreSession()) {
+                const user = window.STATE.currentUser;
+                if (user.role === 'owner') navigate('/owner/dashboard');
+                else if (user.role === 'business') navigate('/business/pos');
+                else if (user.role === 'driver') navigate('/driver/orders');
+                else navigate('/customer/home');
+            } else {
+                if (!location.hash) navigate('/login');
+                else router();
+            }
+        });
+
+        // تعريض الدوال العامة
+        window.navigate = navigate;
+        window.showToast = showToast;
+        window.setTheme = setTheme;
+        window.toggleSidebar = toggleSidebar;
+        window.renderView = renderView;
+        window.router = router;
+        window.updateSidebar = updateSidebar;
+        window.API_BASE = API_BASE;
+        window.closeForgotPassword = closeForgotPassword;
+
+        // إغلاق المودال عند النقر خارج المحتوى
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('forgotPasswordModal');
+            if (e.target === modal) {
+                closeForgotPassword();
+            }
+        });
+
+        console.log('✅ نظام طود جاهز للعمل');
+        console.log('👤 المصمم: Elgioushy | كلمة المرور: 11Tawd2026@');
+    </script>
 </body>
 </html>
